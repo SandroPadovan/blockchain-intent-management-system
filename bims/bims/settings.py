@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'user_manager',
     'intent_manager',
+    'refiner',
+    'policy_manager',
 ]
 
 MIDDLEWARE = [
