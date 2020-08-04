@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
+class Currency(models.Model):
+    currency = models.CharField(primary_key=True, max_length=3)
+    exchange_rate = models.FloatField(default=1)
