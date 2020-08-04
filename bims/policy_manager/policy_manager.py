@@ -17,7 +17,7 @@ class PolicyManager(models.Manager):
             timeframe_start=str(raw_policy.timeframe_start),
             timeframe_end=str(raw_policy.timeframe_end),
             interval=str(raw_policy.interval),
-            currency=raw_policy.currency.name,
+            currency_id=raw_policy.currency.name,
             threshold=raw_policy.threshold,
             split_txs=raw_policy.split_txs,
             blockchain_pool=pickle.dumps(raw_policy.blockchain_pool),  # pickle the set containing the blockchain_pool
