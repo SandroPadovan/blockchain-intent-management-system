@@ -1,4 +1,5 @@
 from .irtk import refine
+from policy_manager.models import Policy
 
 
 def refine_intent(intent):
@@ -9,4 +10,5 @@ def refine_intent(intent):
 
 def save_policies(policies, intent_id):
     """takes a list of policies and an intent_id as input, saves the policies with the intent_id"""
-    pass
+    for policy in policies:
+        Policy.objects.create_policy(policy, intent_id)
