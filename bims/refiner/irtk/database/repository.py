@@ -1,7 +1,8 @@
 from typing import Any, Optional
 
-from .database import Conversion, Database
-from ..intent import Currency
+from .database import Database
+from ..intent import Currency as CurrencyEnum
+from refiner.models import Currency
 
 
 class Repository:
@@ -15,8 +16,10 @@ class Repository:
         with self._database.session_scope() as session:
             session.add(entity)
 
-    def find_conversion_rate(self, currency: Currency) -> float:
+    @staticmethod
+    def find_conversion_rate(currency: CurrencyEnum) -> float:
         """Finds the conversion rate from the database for a currency."""
-        with self._database.session_scope() as session:
-            conversion = session.query(Conversion.rate).filter_by(currency=currency).one()
-            return conversion.rate
+
+        # Accesses the django project database, not the irtk database
+        exchange_rate = Currency.objects.get(currency=currency.name).exchange_rate
+        return exchange_rate
