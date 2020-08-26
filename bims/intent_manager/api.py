@@ -7,13 +7,13 @@ from refiner.refiner import refine_intent, save_policies
 class IntentViewSet(viewsets.ModelViewSet):
     """ViewSets offer CRUD functionality without having to specify explicit methods for creating, retrieving etc."""
     permission_classes = [
-        permissions.AllowAny
+        permissions.IsAuthenticated
     ]
     serializer_class = IntentSerializer
 
     def get_queryset(self):
         """returns a queryset containing all intents"""
-        return Intent.objects.all()
+        return self.request.user.intents.all()
 
     def perform_create(self, serializer):
         """Passes the intent to the refiner. Saves the intent if valid and saves the policies"""
