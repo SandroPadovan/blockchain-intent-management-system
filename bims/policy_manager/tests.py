@@ -1,10 +1,15 @@
 from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
+
 from .models import Policy
 from intent_manager.models import Intent
 from user_manager.models import User
 from refiner.models import Currency
+
 import pickle
+
+from refiner.irtk.policy import Policy as irtkPolicy, CostProfile, Interval, BlockchainType, Currency as irtkCurrency, Time
+from refiner.irtk.intent import Blockchain
 
 
 class PolicyManagerTests(APITestCase):
@@ -61,4 +66,47 @@ class PolicyManagerTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, 'Incorrect status code')
         self.assertEqual(response.data[0]['id'], policy.id, 'Policy IDs do not match.')
 
+    def test_create_policy(self):
 
+        # set up necessary models
+        usd = Currency(currency='USD', exchange_rate=1)
+        usd.save()
+        user = User(username='testUser1')
+        user.save()
+        intent = Intent(username=user, intent_string='For client1 select the fastest Blockchain until the daily costs '
+                                                     'reach 24')
+        intent.save()
+
+        blockchain_pool = {Blockchain.BITCOIN, Blockchain.STELLAR, Blockchain.ETHEREUM}
+        policy_user = 'client1'
+
+        raw_policy = irtkPolicy(
+                            user=policy_user,
+                            cost_profile=CostProfile.PERFORMANCE,
+                            timeframe_start=Time.DEFAULT,
+                            timeframe_end=Time.DEFAULT,
+                            interval=Interval.DAILY,
+                            currency=irtkCurrency.USD,
+                            threshold=24.0,
+                            split_txs=False,
+                            blockchain_pool=blockchain_pool,
+                            blockchain_type=BlockchainType.INDIFFERENT,
+                            min_tx_rate=4,
+                            max_block_time=600,
+                            min_data_size=20,
+                            max_tx_cost=0.0,
+                            min_popularity=0.0,
+                            min_stability=0.0,
+                            turing_complete=False,
+                            encryption=False,
+                            redundancy=False
+                            )
+
+        Policy.objects.create_policy(raw_policy, intent.id)
+
+        policy = Policy.objects.filter(intent_id=intent.id).get()
+        self.assertEqual(len(Policy.objects.filter(intent_id=intent.id)), 1, 'Number of Policies with corresponding '
+                                                                             'intent_id was incorrect')
+        self.assertEqual(policy.user, policy_user, 'User in policy is incorrect')
+        self.assertEqual(policy.threshold, 24, 'Threshold was incorrect')
+        self.assertEqual(pickle.loads(policy.blockchain_pool), blockchain_pool, 'Blockchain Pool is incorrect')
