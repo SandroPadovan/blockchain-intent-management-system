@@ -1,13 +1,17 @@
 from django.test import TestCase
-from .refiner import refine_intent, save_policies
+
+from .refiner import refine_intent, save_policies, update_policies
+
 from .models import Currency
 from intent_manager.models import Intent
 from user_manager.models import User
 from policy_manager.models import Policy
-from refiner.irtk.policy import Policy as irtkPolicy, CostProfile, Interval, BlockchainType, Currency as irtkCurrency, Time
+
+from refiner.irtk.policy import Policy as irtkPolicy, CostProfile, Interval, BlockchainType, Currency as irtkCurrency, \
+    Time
 
 
-class RefinerTests(TestCase):
+class RefinementTests(TestCase):
 
     def setUp(self) -> None:
         # save currencies to database
@@ -25,6 +29,7 @@ class RefinerTests(TestCase):
 
         self.assertEqual(len(policy), 1, 'More than 1 policy were created')
         self.assertEqual(policy[0].user, 'client1')
+        self.assertEqual(policy[0].cost_profile, CostProfile.PERFORMANCE)
 
     def test_refine_CHF_intent(self):
         threshold = 20
@@ -43,39 +48,31 @@ class RefinerTests(TestCase):
 
         self.assertEqual(len(policies), 3, 'Not 3 policy were created')
 
-    def test_save_single_policy(self):
 
-        # save all necessary models
+class RefinerPolicyManipulationTests(TestCase):
+    intent = None
+
+    def setUp(self) -> None:
+        # save currencies to database
+        usd = Currency(currency='USD', exchange_rate=1)
+        chf = Currency(currency='CHF', exchange_rate=1.09)
+        eur = Currency(currency='EUR', exchange_rate=1.18)
+        usd.save()
+        chf.save()
+        eur.save()
+
         user = User(username='testUser0')
         user.save()
-        intent = Intent(username=user, intent_string='For client1 select the fastest Blockchain until the daily costs '
-                                                     'reach 24')
-        intent.save()
+        self.intent = Intent(username=user,
+                             intent_string='For client1 select the fastest Blockchain until the daily costs '
+                                           'reach 24')
+        self.intent.save()
 
-        # create irtkPolicy object
-        policy = irtkPolicy(user='client1',
-                            cost_profile=CostProfile.PERFORMANCE,
-                            timeframe_start=Time.DEFAULT,
-                            timeframe_end=Time.DEFAULT,
-                            interval=Interval.DAILY,
-                            currency=irtkCurrency.USD,
-                            threshold=24.0,
-                            split_txs=False,
-                            blockchain_pool=set(),
-                            blockchain_type=BlockchainType.INDIFFERENT,
-                            min_tx_rate=4,
-                            max_block_time=600,
-                            min_data_size=20,
-                            max_tx_cost=0.0,
-                            min_popularity=0.0,
-                            min_stability=0.0,
-                            turing_complete=False,
-                            encryption=False,
-                            redundancy=False
-                            )
-        policy_list = [policy]
+    def test_save_single_policy(self):
+        irtk_policy = irtk_policy_factory('client1', 24)
+        policy_list = [irtk_policy]
 
-        save_policies(policy_list, 1)
+        save_policies(policy_list, self.intent.id)
 
         self.assertEqual(Policy.objects.count(), 1, 'More than one policy was saved.')
         self.assertEqual(Policy.objects.get().threshold, 24, 'Threshold incorrect')
