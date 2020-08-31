@@ -45,8 +45,7 @@ class IntentManagerTests(APITestCase):
         """test POST request of an intent"""
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
         intent = 'For client1 select the fastest Blockchain until the daily costs reach CHF 20'
-        data = {'username': self.user_id,
-                'intent_string': intent}
+        data = {'intent_string': intent}
 
         response = self.client.post(self.url, data, format='json')
 
@@ -70,8 +69,7 @@ class IntentManagerTests(APITestCase):
         intent_id = Intent.objects.get().id
 
         new_intent = 'For client2 select the cheapest Blockchain until the daily costs reach EUR 30'
-        data = {'username': self.user_id,
-                'intent_string': new_intent}
+        data = {'intent_string': new_intent}
 
         response = self.client.put(self.url + str(intent_id) + '/', data, format='json')
 
