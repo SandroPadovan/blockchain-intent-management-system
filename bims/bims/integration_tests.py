@@ -60,11 +60,11 @@ class IntegrationTests(APITestCase):
         GET_policy2 = self.client.get('/api/policies/?intent_id=' + str(intent_id2))
         self.assertEqual(GET_policy2.status_code, status.HTTP_200_OK, 'Incorrect status of GET policies 2 request')
         self.assertEqual(len(GET_policy2.data), 1, 'Incorrect number of policies returned for intent2')
+        self.assertTrue('EOS' not in GET_policy2.data[0]['blockchain_pool'], 'EOS was in blockchain pool.')
 
         # update intent
-        new_intent2 = 'For client2 and client3 select the cheapest Blockchain except EOS with redundancy and ' \
+        new_intent2 = 'For client2 and client3 select the cheapest Blockchain except Bitcoin with redundancy and ' \
                       'splitting until the daily costs reach 21'
-
         PUT_intent2 = self.client.put('/api/intents/' + str(intent_id2) + '/', {'intent_string': new_intent2}, format='json')
         self.assertEqual(PUT_intent2.status_code, status.HTTP_200_OK, 'Incorrect status of PUT intent')
         self.assertEqual(Intent.objects.get(id=intent_id2).intent_string, new_intent2)
@@ -76,7 +76,10 @@ class IntegrationTests(APITestCase):
         self.assertEqual(GET_updated_policy.data[0]['threshold'], 21, 'Incorrect threshold of updated policy')
         self.assertTrue(GET_updated_policy.data[0]['threshold'] == GET_updated_policy.data[1]['threshold'],
                         'Thresholds of policies are not equal')
-        # TODO: more assertions
+        self.assertTrue(bool(GET_updated_policy.data[0]['created_at'] != GET_updated_policy.data[0]['updated_at'])
+                        != bool(GET_updated_policy.data[1]['created_at'] != GET_updated_policy.data[1]['updated_at']))
+        self.assertTrue('BITCOIN' not in GET_updated_policy.data[0]['blockchain_pool'], 'BITCOIN was in blockchain pool.')
+        self.assertTrue('EOS' in GET_updated_policy.data[0]['blockchain_pool'], 'EOS was not in blockchain pool.')
 
         # log out
         POST_logout = self.client.post('/api/auth/logout/', None, format='json')
