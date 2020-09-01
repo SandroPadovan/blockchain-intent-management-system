@@ -44,7 +44,7 @@ class PolicyManagerTests(APITestCase):
             interval='Interval.DAILY',
             threshold=24.0,
             split_txs=False,
-            blockchain_pool=pickle.dumps('blablabla'),
+            blockchain_pool=pickle.dumps({Blockchain.ETHEREUM, Blockchain.STELLAR}),
             blockchain_type='BlockchainType.INDIFFERENT',
             min_tx_rate=4,
             max_block_time=600,
@@ -65,6 +65,8 @@ class PolicyManagerTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, 'Incorrect status code')
         self.assertEqual(response.data[0]['id'], policy.id, 'Policy IDs do not match.')
+        self.assertEqual(sorted(response.data[0]['blockchain_pool']), ['ETHEREUM', 'STELLAR'],
+                         'Incorrect blockchain pool')
 
     def test_create_policy(self):
 
