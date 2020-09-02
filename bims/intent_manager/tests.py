@@ -3,6 +3,7 @@ from rest_framework.test import APIClient, APITestCase
 from intent_manager.models import Intent
 from user_manager.models import User
 from refiner.models import Currency
+from policy_manager.models import Policy
 import time
 
 
@@ -77,3 +78,34 @@ class IntentManagerTests(APITestCase):
         self.assertEqual(Intent.objects.get().intent_string, new_intent, 'intent_string was not updated')
         self.assertNotEqual(Intent.objects.get().created_at, Intent.objects.get().updated_at,
                             'created_at and updated_at timestamp are equal')
+
+    def test_delete_intent(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+
+        existing_intent = Intent(username=User.objects.get(), intent_string='For client1 select the fastest '
+                                                                            'Blockchain until the daily costs reach '
+                                                                            'CHF 20')
+        existing_intent.save()
+
+        response = self.client.delete(self.url + str(existing_intent.id) + '/')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, 'Incorrect status code')
+        self.assertFalse(Intent.objects.filter(id=existing_intent.id), 'Intent was not deleted')
+
+    def test_delete_intent_with_policies(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        existing_intent = Intent(username=User.objects.get(), intent_string='For client1 select the fastest '
+                                                                            'Blockchain until the daily costs reach '
+                                                                            'CHF 20')
+        existing_intent.save()
+        policy = Policy(intent_id=existing_intent,
+                        currency=Currency.objects.get(currency='USD'))
+        policy.save()
+
+        self.assertTrue(Policy.objects.filter(intent_id=existing_intent.id), 'Policy was not created in set-up')
+
+        response = self.client.delete(self.url + str(existing_intent.id) + '/')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, 'Incorrect status code')
+        self.assertFalse(Intent.objects.filter(id=existing_intent.id), 'Intent was not deleted')
+        self.assertFalse(Policy.objects.filter(intent_id=existing_intent.id), 'Policy of intent was not deleted')
