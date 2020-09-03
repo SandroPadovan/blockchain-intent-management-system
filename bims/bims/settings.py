@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'intent_manager',
     'refiner',
     'policy_manager',
+    'frontend'
 ]
 
 REST_FRAMEWORK = {
