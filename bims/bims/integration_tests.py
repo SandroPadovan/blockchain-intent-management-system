@@ -81,6 +81,10 @@ class IntegrationTests(APITestCase):
         self.assertTrue('BITCOIN' not in GET_updated_policy.data[0]['blockchain_pool'], 'BITCOIN was in blockchain pool.')
         self.assertTrue('EOS' in GET_updated_policy.data[0]['blockchain_pool'], 'EOS was not in blockchain pool.')
 
+        DEL_intent = self.client.delete('/api/intents/' + str(intent_id2) + '/')
+        self.assertEqual(DEL_intent.status_code, status.HTTP_204_NO_CONTENT, 'Intent was not deleted.')
+        self.assertEqual(self.client.get('/api/intents/' + str(intent_id2) + '/').status_code, status.HTTP_404_NOT_FOUND)
+
         # log out
         POST_logout = self.client.post('/api/auth/logout/', None, format='json')
         self.assertEqual(POST_logout.status_code, status.HTTP_204_NO_CONTENT, 'Incorrect status of POST logout request')
