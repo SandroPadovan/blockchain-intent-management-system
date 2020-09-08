@@ -4,7 +4,8 @@ import {
     USER_LOADING,
     AUTH_ERROR,
     LOGIN_FAIL,
-    LOGIN_SUCCESS
+    LOGIN_SUCCESS,
+    LOGOUT_SUCCESS
 } from "./types";
 
 export const loadUser = () => (dispatch, getState) => {
@@ -64,6 +65,27 @@ export const login = (username, password) => dispatch => {
                 type: LOGIN_FAIL,
             })
         })
+}
 
+// Logout
+export const logout = () => (dispatch, getState) => {
+    const token = getState().auth.token;
 
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }
+
+    if (token) {
+        config.headers['Authorization'] = `Token ${token}`;
+    }
+
+    axios.post('/api/auth/logout', null, config)
+        .then((res) => {
+            dispatch({ type: LOGOUT_SUCCESS });
+        })
+        .catch((err) => {
+            console.log(err);
+        })
 }
