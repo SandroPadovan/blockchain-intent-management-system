@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login} from "../../actions/auth";
@@ -22,32 +23,45 @@ class Login extends Component {
     onChange = e => this.setState({ [e.target.name]: e.target.value });
 
     render() {
+        if (this.props.isAuthenticated) {
+            return <Redirect to="/overview"/>
+        }
         const {username, password} = this.state;
         return (
             <div>
-                <form onSubmit={this.onSubmit}>
-                    <div>
-                        <label>Username</label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={username}
-                            onChange={this.onChange}
-                        />
+                <div className="col-md-6 m-auto">
+                    <div className="card card-body mt-5">
+                        <h2 className="text-center">Login</h2>
+                        <form onSubmit={this.onSubmit}>
+                            <div className="form-group">
+                                <label>Username</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="username"
+                                    value={username}
+                                    onChange={this.onChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Password</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="password"
+                                    value={password}
+                                    onChange={this.onChange}
+                                />
+                            </div>
+                            <div>
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                >Login</button>
+                            </div>
+                        </form>
                     </div>
-                    <div>
-                        <label>Password</label>
-                        <input
-                            type="text"
-                            name="password"
-                            value={password}
-                            onChange={this.onChange}
-                        />
-                    </div>
-                    <div>
-                        <button type="submit">Login</button>
-                    </div>
-                </form>
+                </div>
             </div>
         );
     }
