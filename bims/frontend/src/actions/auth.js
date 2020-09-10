@@ -5,16 +5,14 @@ import {
     AUTH_ERROR,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
-    LOGOUT_SUCCESS
+    LOGOUT_SUCCESS,
+    REGISTER_SUCCESS,
+    REGISTER_FAIL
 } from "./types";
 
-export const loadUser = () => (dispatch, getState) => {
-    // User loading
-    dispatch({ type: USER_LOADING});
-
+export const constructHeaders = (getState) => {
     const token = getState().auth.token;
 
-    // Headers
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -23,8 +21,15 @@ export const loadUser = () => (dispatch, getState) => {
     if (token) {
         config.headers['Authorization'] = `Token ${token}`;
     }
+    return config;
+}
 
-    axios.get('/api/auth/user', config)
+
+export const loadUser = () => (dispatch, getState) => {
+    // User loading
+    dispatch({ type: USER_LOADING});
+
+    axios.get('/api/auth/user', constructHeaders(getState))
         .then(res => {
             dispatch({
                 type: USER_LOADED,
@@ -69,23 +74,34 @@ export const login = (username, password) => dispatch => {
 
 // Logout
 export const logout = () => (dispatch, getState) => {
-    const token = getState().auth.token;
 
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }
-
-    if (token) {
-        config.headers['Authorization'] = `Token ${token}`;
-    }
-
-    axios.post('/api/auth/logout', null, config)
+    axios.post('/api/auth/logout', null, constructHeaders(getState))
         .then((res) => {
             dispatch({ type: LOGOUT_SUCCESS });
         })
         .catch((err) => {
             console.log(err);
+        })
+}
+
+// Register
+export const register = (username, password) => (dispatch, getState) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }
+    const body = JSON.stringify({username, password})
+
+    axios.post('/api/auth/register', body, config)
+        .then((res) => {
+            console.log('hello world');
+            dispatch({
+                type: REGISTER_SUCCESS,
+                payload: res.data
+            });
+        })
+        .catch((err) => {
+            dispatch({ type: REGISTER_FAIL });
         })
 }
