@@ -9,6 +9,7 @@ import {
     REGISTER_SUCCESS,
     REGISTER_FAIL
 } from "./types";
+import {createMessage, returnErrors} from "./messageActions";
 
 export const constructHeaders = (getState) => {
     const token = getState().auth.token;
@@ -65,7 +66,7 @@ export const login = (username, password) => dispatch => {
             });
         })
         .catch((err) => {
-            console.log(err);
+            dispatch(returnErrors(err.response.data, err.response.status));
             dispatch({
                 type: LOGIN_FAIL,
             })
@@ -95,13 +96,13 @@ export const register = (username, password) => (dispatch, getState) => {
 
     axios.post('/api/auth/register', body, config)
         .then((res) => {
-            console.log('hello world');
             dispatch({
                 type: REGISTER_SUCCESS,
                 payload: res.data
             });
         })
         .catch((err) => {
+            dispatch(returnErrors(err.response.data, err.response.status));
             dispatch({ type: REGISTER_FAIL });
         })
 }
