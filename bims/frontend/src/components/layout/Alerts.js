@@ -24,6 +24,7 @@ class Alerts extends Component {
             if (message.deleteIntent) alert.success(message.deleteIntent);
             if (message.createIntent) alert.success(message.createIntent);
             if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
+            if (message.updateIntent) alert.success(message.updateIntent);
         }
 
     }

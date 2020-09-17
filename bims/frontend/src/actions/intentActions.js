@@ -11,6 +11,7 @@ import {
     POLICY_SUCCESS,
     POLICY_FAIL,
     CREATE_INTENT,
+    UPDATE_INTENT,
 } from './types';
 
 // GET intents
@@ -86,6 +87,22 @@ export const postIntent = (intent) => (dispatch, getState) => {
             })
         })
         .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
+}
+
+export const updateIntent = (id, new_intent) => (dispatch, getState) => {
+
+    const body = JSON.stringify({intent_string: new_intent});
+
+    axios.put(`/api/intents/${id}/`, body, constructHeaders(getState))
+        .then(res => {
+            dispatch(createMessage({updateIntent: 'Intent updated'}));
+            dispatch({
+                type: UPDATE_INTENT,
+                payload: res.data
+            })
+        })
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+
 }
 
 export const validateIntent = (intent) => {

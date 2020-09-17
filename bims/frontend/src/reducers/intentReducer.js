@@ -6,7 +6,8 @@ import {
     INTENT_ERROR,
     POLICY_SUCCESS,
     POLICY_FAIL,
-    CREATE_INTENT
+    CREATE_INTENT,
+    UPDATE_INTENT,
 } from '../actions/types.js';
 
 const initialState = {
@@ -61,7 +62,16 @@ export default function (state = initialState, action) {
         case CREATE_INTENT:
             return {
                 ...state,
-                intents: [...state.intents, action.payload]
+                intents: [...state.intents, action.payload],
+                redirectToOverview: true,
+            }
+        case UPDATE_INTENT:
+            return {
+                ...state,
+                selectedIntent: {},
+                policies: [],
+                isLoading: false,
+                redirectToOverview: true,
             }
         case DELETE_INTENT:
             return {
