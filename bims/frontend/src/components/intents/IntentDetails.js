@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { retrieveIntent, deleteIntent } from "../../actions/intents";
+import { retrieveIntent, deleteIntent } from "../../actions/intentActions";
 import Moment from 'moment';
 import Policies from "./Policies";
 import { Link, Redirect } from 'react-router-dom';

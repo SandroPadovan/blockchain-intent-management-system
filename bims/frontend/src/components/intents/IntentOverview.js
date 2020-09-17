@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { getIntents } from "../../actions/intents";
+import { getIntents } from "../../actions/intentActions";
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
