@@ -39,6 +39,9 @@ class Header extends Component {
             <div className="w-100 d-flex justify-content-end">
                 <ul className="navbar-nav">
                     <li className="nav-item p-10">
+                        <Link className="nav-link" to="/help">Help</Link>
+                    </li>
+                    <li className="nav-item p-10">
                         <Link className="nav-link" to="/register">Register</Link>
                     </li>
                     <li className="nav-item">
