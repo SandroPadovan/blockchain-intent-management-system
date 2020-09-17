@@ -14,7 +14,8 @@ const initialState = {
     intents: [],
     selectedIntent: {},
     policies: [],
-    isLoading: false
+    isLoading: false,
+    redirectToOverview: false,
 }
 
 export default function (state = initialState, action) {
@@ -29,7 +30,7 @@ export default function (state = initialState, action) {
         case INTENT_ERROR:
             return {
                 ...state,
-                selectedIntent: null,
+                selectedIntent: {},
                 policies: [],
                 isLoading: false
             }
@@ -39,7 +40,8 @@ export default function (state = initialState, action) {
                 selectedIntent: {},
                 intents: action.payload,
                 policies: [],
-                isLoading: false
+                isLoading: false,
+                redirectToOverview: false,
             }
         case RETRIEVE_INTENT:
             return {
@@ -76,8 +78,9 @@ export default function (state = initialState, action) {
         case DELETE_INTENT:
             return {
                 ...state,
-                selectedIntent: null,
-                isLoading: false
+                selectedIntent: {},
+                isLoading: false,
+                redirectToOverview: true,
             }
         default:
             return state;

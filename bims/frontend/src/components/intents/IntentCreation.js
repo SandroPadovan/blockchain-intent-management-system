@@ -13,6 +13,7 @@ class IntentCreation extends Component {
     }
 
     static propTypes = {
+        redirectToOverview: PropTypes.bool.isRequired,
         postIntent: PropTypes.func.isRequired,
     }
 
@@ -27,7 +28,6 @@ class IntentCreation extends Component {
     onSubmit = e => {
         e.preventDefault();
         this.props.postIntent(this.state.intent);
-        this.props.history.goBack();
     }
 
     onChange = e => {
@@ -40,6 +40,11 @@ class IntentCreation extends Component {
 
         const linkToHelp = <Link to="/help">Help Page</Link>
         const { intent } = this.state;
+        const { redirectToOverview } = this.props
+
+        if (redirectToOverview) {
+            return <Redirect to="/overview"/>
+        }
 
         return (
             <div>
@@ -87,5 +92,9 @@ class IntentCreation extends Component {
     }
 }
 
+const mapStateToProps = state => ({
+    redirectToOverview: state.intentReducer.redirectToOverview
+})
 
-export default connect(null, { postIntent })(IntentCreation);
+
+export default connect(mapStateToProps, { postIntent })(IntentCreation);

@@ -11,7 +11,6 @@ class IntentDetails extends Component {
 
     static propTypes = {
         intentReducer: PropTypes.object.isRequired,
-        isLoading: PropTypes.bool.isRequired,
         retrieveIntent: PropTypes.func.isRequired,
         deleteIntent: PropTypes.func.isRequired
     }
@@ -21,11 +20,15 @@ class IntentDetails extends Component {
     }
 
     render() {
-        const {selectedIntent, isLoading} = this.props.intentReducer;
+        const {selectedIntent, isLoading, redirectToOverview} = this.props.intentReducer;
 
         if (isLoading) {
             return <h2>Loading...</h2>
-        } else if (selectedIntent) {
+        }
+        else if (redirectToOverview) {
+            return <Redirect to="/overview"/>;
+        }
+        else {
             const modal = (
                 <div className="modal fade" id="confirmDelete">
                     <div className="modal-dialog" role="document">
@@ -92,15 +95,12 @@ class IntentDetails extends Component {
                     </div>
                 </div>
             );
-        } else {
-            return <Redirect to="/overview"/>
         }
     }
 }
 
 const mapStateToProps = (state) => ({
     intentReducer: state.intentReducer,
-    isLoading: state.intentReducer.isLoading
 });
 
 export default connect(mapStateToProps, { retrieveIntent, deleteIntent })(IntentDetails);
