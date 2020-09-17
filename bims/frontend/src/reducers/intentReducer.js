@@ -1,22 +1,73 @@
-import { GET_INTENTS, RETRIEVE_INTENT } from '../actions/types.js';
+import {
+    GET_INTENTS,
+    RETRIEVE_INTENT,
+    DELETE_INTENT,
+    LOADING,
+    INTENT_ERROR,
+    POLICY_SUCCESS,
+    POLICY_FAIL,
+    CREATE_INTENT
+} from '../actions/types.js';
 
 const initialState = {
     intents: [],
-    selectedIntent: null
+    selectedIntent: {},
+    policies: [],
+    isLoading: false
 }
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case GET_INTENTS:
+        case LOADING:
+            return {
+                ...state,
+                selectedIntent: {},
+                policies: [],
+                isLoading: true,
+            }
+        case INTENT_ERROR:
             return {
                 ...state,
                 selectedIntent: null,
-                intents: action.payload
+                policies: [],
+                isLoading: false
+            }
+        case GET_INTENTS:
+            return {
+                ...state,
+                selectedIntent: {},
+                intents: action.payload,
+                policies: [],
+                isLoading: false
             }
         case RETRIEVE_INTENT:
             return {
                 ...state,
-                selectedIntent: action.payload
+                selectedIntent: action.payload,
+                isLoading: false
+            }
+        case POLICY_SUCCESS:
+            return {
+                ...state,
+                policies: action.payload,
+                isLoading: false
+            }
+        case POLICY_FAIL:
+            return {
+                ...state,
+                policies: [],
+                isLoading: false
+            }
+        case CREATE_INTENT:
+            return {
+                ...state,
+                intents: [...state.intents, action.payload]
+            }
+        case DELETE_INTENT:
+            return {
+                ...state,
+                selectedIntent: null,
+                isLoading: false
             }
         default:
             return state;
