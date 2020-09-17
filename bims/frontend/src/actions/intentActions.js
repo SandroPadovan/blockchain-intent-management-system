@@ -87,3 +87,9 @@ export const postIntent = (intent) => (dispatch, getState) => {
         })
         .catch((err) => dispatch(returnErrors(err.response.data, err.response.status)));
 }
+
+export const validateIntent = (intent) => {
+
+    // dummy function
+    return intent.length > 20;
+}

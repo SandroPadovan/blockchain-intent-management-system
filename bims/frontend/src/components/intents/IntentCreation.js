@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { postIntent } from "../../actions/intentActions";
-import { Link } from 'react-router-dom';
+import { postIntent, validateIntent } from "../../actions/intentActions";
+import { Link, Redirect } from 'react-router-dom';
 
 
 class IntentCreation extends Component {
@@ -17,10 +17,7 @@ class IntentCreation extends Component {
     }
 
     checkIfValid() {
-        // method to check if intent is valid and give feedback/suggestion
-
-        // dummy function that only checks length
-        if (this.state.intent.length > 20) {
+        if (validateIntent(this.state.intent)) {
             this.setState({isValid: true});
         } else {
             this.setState({isValid: false});
