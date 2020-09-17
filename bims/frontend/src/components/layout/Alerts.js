@@ -16,7 +16,8 @@ class Alerts extends Component {
         if (error !== prevProps.error) {
             if (error.msg.expected) alert.error(`Invalid Intent.`);
             if (error.msg.non_field_errors) alert.error(error.msg.non_field_errors.join());
-            if (error.msg.username) alert.error(error.msg.username.join());
+            if (error.msg.username) alert.error(`Username: ${error.msg.username.join()}`);
+            if (error.msg.password) alert.error(`Password: ${error.msg.password.join()}`);
 
         }
 
