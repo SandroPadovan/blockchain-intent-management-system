@@ -23,26 +23,30 @@ class IntentOverview extends Component {
                     <Link to="/create-intent" className="btn btn-primary">Create New Intent</Link>
                 </div>
                 <h2>Intent Overview</h2>
-                <table className="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Intent</th>
-                        <th scope="col">Created at</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {this.props.intents.map((intent) => (
-                        <tr key={intent.id}>
-                            <td>{intent.intent_string}</td>
-                            <td>{Moment(intent.created_at).format('DD.MM.YY HH:mm')}</td>
-                            <td>
-                                <Link className="btn btn-secondary" to={`/intent/${intent.id}`}>Details</Link>
-                            </td>
+                {this.props.intents.length === 0 ?
+                    <h4 className="mt-5">No intents yet...</h4>
+                    :
+                    <table className="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Intent</th>
+                            <th scope="col">Created at</th>
+                            <th></th>
                         </tr>
-                    ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {this.props.intents.map((intent) => (
+                            <tr key={intent.id}>
+                                <td>{intent.intent_string}</td>
+                                <td>{Moment(intent.created_at).format('DD.MM.YY HH:mm')}</td>
+                                <td>
+                                    <Link className="btn btn-secondary" to={`/intent/${intent.id}`}>Details</Link>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                }
             </div>
         );
     }
