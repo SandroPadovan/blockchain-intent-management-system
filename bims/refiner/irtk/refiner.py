@@ -4,6 +4,7 @@ from typing import List, Optional
 from .parser.parser import Parser
 from .translator import Translator
 from .policy import Policy
+from .incompleteIntentException import IncompleteIntentException
 
 LOGGER = logging.getLogger(__name__)
 
@@ -19,7 +20,8 @@ def refine(raw_intent: str) -> Optional[List[Policy]]:
 
     if not intent:
         LOGGER.warning("Refiner: could not refine incomplete or invalid intent")
-        return None
+        raise IncompleteIntentException("Intent is incomplete",
+                                        set(parser._state._transitions))
 
     policies = TRANSLATOR.translate(intent)
     return policies
