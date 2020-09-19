@@ -1,6 +1,9 @@
 from intent_manager.models import Intent
 from .serializers import IntentSerializer
 from refiner.refiner import refine_intent, save_policies, update_policies
+from refiner.irtk.parser.state import IllegalTransitionError
+from refiner.irtk.incompleteIntentException import IncompleteIntentException
+from refiner.irtk.validation import ValidationError
 
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
@@ -21,7 +24,24 @@ class IntentViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         """Passes the intent to the refiner. Saves the intent if valid and saves the policies"""
-        policies = refine_intent(request.data.get('intent_string'))
+        try:
+            policies = refine_intent(request.data.get('intent_string'))
+        except IllegalTransitionError as error:
+            return Response({
+                'message': error.message,
+                'expected': error.expected
+            }, status=status.HTTP_400_BAD_REQUEST)
+        except IncompleteIntentException as error:
+            return Response({
+                'message': error.message,
+                'expected': error.expected
+            }, status=status.HTTP_400_BAD_REQUEST)
+        except ValidationError as error:
+            return Response({
+                'message': error.message,
+                'expected': error.expected
+            }, status=status.HTTP_400_BAD_REQUEST)
+
         intent = Intent(username=request.user,
                         intent_string=request.data.get('intent_string'))
         intent.save()
