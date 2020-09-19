@@ -203,7 +203,7 @@ class FilterStateValidator:
         if filter_ in self._CONFLICTS and self._CONFLICTS[filter_] in intent.filters:
             raise ValidationError(
                 f"{self}: validation error: filters '{token}' and "
-                f"'{self._CONFLICTS[filter_].value}' are mutually exclusive"
+                f"'{self._CONFLICTS[filter_].value}' are mutually exclusive", []
             )
         if filter_ in self._EXCLUSIONS and self._EXCLUSIONS[filter_] is intent.profile:
             LOGGER.info(
@@ -438,7 +438,7 @@ class ThresholdState(ValidationState):
         try:
             intent.threshold = float(token)  # float("NaN") -> nan
         except ValueError as error:
-            raise ValidationError(f"{self}: validation error: {error}")
+            raise ValidationError(f"{self}: validation error: {error}", [])
 
 
 class PolicyState(State):

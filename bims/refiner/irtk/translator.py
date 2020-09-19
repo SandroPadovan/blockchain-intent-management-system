@@ -62,7 +62,7 @@ class Translator:
         if intent.blacklist:
             self._policy.blockchain_pool = {*Blockchain} - intent.blacklist
             if not self._policy.blockchain_pool:
-                raise ValidationError("invalid policy: blockchain pool cannot be empty")
+                raise ValidationError("invalid policy: blockchain pool cannot be empty", [])
 
     def _translate_filters(self, intent: Intent) -> None:
         if Filter.PUBLIC in intent.filters:
