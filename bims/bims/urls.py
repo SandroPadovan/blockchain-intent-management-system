@@ -7,4 +7,5 @@ urlpatterns = [
     path('', include('intent_manager.urls')),
     path('', include('policy_manager.urls')),
     path('', include('user_manager.urls')),
+    path('', include('refiner.urls')),
 ]
