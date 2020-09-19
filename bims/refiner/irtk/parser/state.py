@@ -16,6 +16,9 @@ class IllegalTransitionError(Exception):
     If a state of the Parser state machine encounters an invalid token (a token for which no
     transition is defined) while parsing an intent, it raises an IllegalTransitionError.
     """
+    def __init__(self, message, expected):
+        self.message = message
+        self.expected = expected
 
 
 class State(abc.ABC):
@@ -38,7 +41,8 @@ class State(abc.ABC):
         del intent
         if token not in self._transitions:
             raise IllegalTransitionError(
-                f"{self}: illegal transition: expected {set(self._transitions)}, got '{token}'"
+                f"{self}: illegal transition: expected {set(self._transitions)}, got '{token}'",
+                set(self._transitions)
             )
         return self._transitions[token]
 
