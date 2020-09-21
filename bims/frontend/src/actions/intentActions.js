@@ -12,6 +12,7 @@ import {
     POLICY_FAIL,
     CREATE_INTENT,
     UPDATE_INTENT,
+    PARSE_INTENT,
 } from './types';
 
 // GET intents
@@ -105,8 +106,27 @@ export const updateIntent = (id, new_intent) => (dispatch, getState) => {
 
 }
 
-export const validateIntent = (intent) => {
+export const validateIntent = (intent) => (dispatch, getState) => {
+    // makes a call to the Parser API, status 204 means the intent is valid.
+    // returns a Promise, which resolves to a boolean whether the Intent is valid.
 
-    // dummy function
-    return intent.length > 20;
+    const body = JSON.stringify({intent_string: intent});
+    console.log('Parse request sent.');
+
+    return axios.post('/api/parser', body, constructHeaders(getState))
+        .then(res => {
+            if (res.data) {
+                dispatch({
+                    type: PARSE_INTENT,
+                    payload: res.data
+                });
+            } else {
+                dispatch({
+                    type: PARSE_INTENT,
+                    payload: {expected: [], message: ''}
+                });
+            }
+            return res.status === 204;
+        })
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }

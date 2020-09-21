@@ -8,6 +8,7 @@ import {
     POLICY_FAIL,
     CREATE_INTENT,
     UPDATE_INTENT,
+    PARSE_INTENT,
 } from '../actions/types.js';
 
 const initialState = {
@@ -16,6 +17,8 @@ const initialState = {
     policies: [],
     isLoading: false,
     redirectToOverview: false,
+    expected: [],
+    parserMessage: "",
 }
 
 export default function (state = initialState, action) {
@@ -81,6 +84,12 @@ export default function (state = initialState, action) {
                 selectedIntent: {},
                 isLoading: false,
                 redirectToOverview: true,
+            }
+        case PARSE_INTENT:
+            return {
+                ...state,
+                expected: action.payload.expected,
+                parserMessage: action.payload.message
             }
         default:
             return state;
