@@ -3,88 +3,62 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { postIntent, validateIntent } from "../../actions/intentActions";
 import { Link, Redirect } from 'react-router-dom';
+import IntentInputField from "./IntentInputField";
 
 
 class IntentCreation extends Component {
 
+    constructor(props) {
+        super(props);
+        this.checkIfValid = this.checkIfValid.bind(this);
+    }
+
     state = {
-        intent: "For ",
         isValid: false,
     }
 
     static propTypes = {
         redirectToOverview: PropTypes.bool.isRequired,
         postIntent: PropTypes.func.isRequired,
+        expected: PropTypes.array.isRequired,
+        parserMessage: PropTypes.string.isRequired,
     }
 
-    checkIfValid() {
-        if (validateIntent(this.state.intent)) {
-            this.setState({isValid: true});
-        } else {
-            this.setState({isValid: false});
-        }
+    checkIfValid(intent) {
+        this.props.validateIntent(intent)
+            .then(valid => {    // resolve the Promise to the boolean whether the Intent is valid.
+                if (intent && valid) {
+                    this.setState({isValid: true});
+                } else {
+                    this.setState({isValid: false});
+                }
+            }).catch(err => console.log(err))
     }
 
-    onSubmit = e => {
-        e.preventDefault();
-        this.props.postIntent(this.state.intent);
-    }
-
-    onChange = e => {
-        this.setState({ [e.target.name]: e.target.value }, () => {
-            this.checkIfValid();
-        });
+    createIntent = (intent) => {
+        this.props.postIntent(intent);
     }
 
     render() {
-
-        const linkToHelp = <Link to="/help">Help Page</Link>
-        const { intent } = this.state;
-        const { redirectToOverview } = this.props
-
-        if (redirectToOverview) {
+        if (this.props.redirectToOverview) {
             return <Redirect to="/overview"/>
         }
+
+        const linkToHelp = <Link to="/help">Help Page</Link>
 
         return (
             <div>
                 <Link to="/overview" className="btn btn-primary mt-4">Back</Link>
                 <div className="jumbotron mt-4">
                     <h3>Create a new Intent</h3>
-                    <form onSubmit={this.onSubmit}>
-                        {this.state.isValid ?
-                            <div className="form-group has-success mt-5">
-                                <input
-                                    type="text"
-                                    value={intent}
-                                    name="intent"
-                                    className="form-control is-valid"
-                                    id="intentInput"
-                                    onChange={this.onChange}
-                                />
-                                <div className="valid-feedback">Valid Intent</div>
-                            </div>
-                            :
-                            <div className="form-group has-danger mt-5">
-                                <input
-                                    type="text"
-                                    value={intent}
-                                    name="intent"
-                                    className="form-control is-invalid"
-                                    id="intentInput"
-                                    onChange={this.onChange}
-                                />
-                                <div className="invalid-feedback">Invalid Intent</div>
-                            </div>}
-
-                        <div className="text-right">
-                            <button
-                                type="submit"
-                                className="btn btn-primary"
-                                disabled={!this.state.isValid}
-                            >Submit</button>
-                        </div>
-                    </form>
+                    <IntentInputField
+                        expected={this.props.expected}
+                        checkIfValid={this.checkIfValid}
+                        isValid={this.state.isValid}
+                        onSubmit={this.createIntent}
+                        buttonText="Submit"
+                        initialValue="For "
+                    />
                     <p>For an explanation on how to create a valid Intent, see the {linkToHelp}</p>
                 </div>
             </div>
@@ -93,8 +67,10 @@ class IntentCreation extends Component {
 }
 
 const mapStateToProps = state => ({
-    redirectToOverview: state.intentReducer.redirectToOverview
+    redirectToOverview: state.intentReducer.redirectToOverview,
+    expected: state.intentReducer.expected,
+    parserMessage: state.intentReducer.parserMessage,
 })
 
 
-export default connect(mapStateToProps, { postIntent })(IntentCreation);
+export default connect(mapStateToProps, { postIntent, validateIntent })(IntentCreation);

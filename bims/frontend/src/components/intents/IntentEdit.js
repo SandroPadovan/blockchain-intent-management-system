@@ -3,12 +3,17 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import { updateIntent, validateIntent } from '../../actions/intentActions';
+import IntentInputField from "./IntentInputField";
 
 
 class IntentEdit extends Component {
 
+    constructor(props) {
+        super(props);
+        this.checkIfValid = this.checkIfValid.bind(this);
+    }
+
     state = {
-        intent: "",
         isValid: true,
     }
 
@@ -17,35 +22,26 @@ class IntentEdit extends Component {
         updateIntent: PropTypes.func.isRequired,
     }
 
-    componentDidMount() {
-        this.setState({intent: this.props.intentReducer.selectedIntent.intent_string});
+    checkIfValid(intent) {
+        this.props.validateIntent(intent)
+            .then(valid => {    // resolve the Promise to the boolean whether the Intent is valid.
+                if (intent && valid) {
+                    this.setState({isValid: true});
+                } else {
+                    this.setState({isValid: false});
+                }
+            }).catch(err => console.log(err))
     }
 
-    checkIfValid() {
-        if (validateIntent(this.state.intent)) {
-            this.setState({isValid: true});
-        } else {
-            this.setState({isValid: false});
+    updateIntent = (intent) => {
+        if (this.props.intentReducer.selectedIntent.intent_string !== intent) {
+            this.props.updateIntent(this.props.intentReducer.selectedIntent.id, intent);
         }
-    }
-
-    onSubmit = e => {
-        e.preventDefault();
-        if (this.props.intentReducer.selectedIntent.intent_string !== this.state.intent) {
-            this.props.updateIntent(this.props.intentReducer.selectedIntent.id, this.state.intent);
-        }
-    }
-
-    onChange = e => {
-        this.setState({ [e.target.name]: e.target.value }, () => {
-            this.checkIfValid();
-        });
     }
 
     render() {
 
         const linkToHelp = <Link to="/help">Help Page</Link>;
-        const { intent } = this.state;
         const { redirectToOverview } = this.props.intentReducer;
 
         if (redirectToOverview) {
@@ -57,40 +53,14 @@ class IntentEdit extends Component {
                 <button onClick={() => this.props.history.goBack()} className="btn btn-primary mt-4">Back</button>
                 <div className="jumbotron mt-4">
                     <h3>Edit Intent</h3>
-                    <form onSubmit={this.onSubmit}>
-                        {this.state.isValid ?
-                            <div className="form-group has-success mt-5">
-                                <input
-                                    type="text"
-                                    value={intent}
-                                    name="intent"
-                                    className="form-control is-valid"
-                                    id="intentInput"
-                                    onChange={this.onChange}
-                                />
-                                <div className="valid-feedback">Valid Intent</div>
-                            </div>
-                            :
-                            <div className="form-group has-danger mt-5">
-                                <input
-                                    type="text"
-                                    value={intent}
-                                    name="intent"
-                                    className="form-control is-invalid"
-                                    id="intentInput"
-                                    onChange={this.onChange}
-                                />
-                                <div className="invalid-feedback">Invalid Intent</div>
-                            </div>}
-
-                        <div className="text-right">
-                            <button
-                                type="submit"
-                                className="btn btn-primary"
-                                disabled={!this.state.isValid}
-                            >Update</button>
-                        </div>
-                    </form>
+                    <IntentInputField
+                        expected={this.props.intentReducer.expected}
+                        checkIfValid={this.checkIfValid}
+                        isValid={this.state.isValid}
+                        onSubmit={this.updateIntent}
+                        buttonText="Update"
+                        initialValue={this.props.intentReducer.selectedIntent.intent_string}
+                    />
                     <p>For an explanation on how to create a valid Intent, see the {linkToHelp}</p>
                 </div>
             </div>
@@ -103,4 +73,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { updateIntent })(IntentEdit);
+export default connect(mapStateToProps, { updateIntent, validateIntent })(IntentEdit);
