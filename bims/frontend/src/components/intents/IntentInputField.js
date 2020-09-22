@@ -17,6 +17,7 @@ class IntentInputField extends Component {
         onSubmit: PropTypes.func.isRequired,
         buttonText: PropTypes.string.isRequired,
         initialValue: PropTypes.string.isRequired,
+        parserMessage: PropTypes.string.isRequired,
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -120,8 +121,8 @@ class IntentInputField extends Component {
         }
 
         const suggestions = (
-            <div>
-                <ul className="list-group position-absolute">
+            <div className="position-relative">
+                <ul className="list-group position-absolute w-75" style={{"zIndex": "2"}}>
                     {this.state.suggestions.map((suggestion, index) => {
                         let classNameSuggestion;
                         if (index === activeSuggestion) {
