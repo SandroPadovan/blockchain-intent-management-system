@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import { updateIntent, validateIntent } from '../../actions/intentActions';
 import IntentInputField from "./IntentInputField";
+import IntentExplanation from "./IntentExplanation";
 
 
 class IntentEdit extends Component {
@@ -62,7 +63,7 @@ class IntentEdit extends Component {
                         initialValue={this.props.intentReducer.selectedIntent.intent_string}
                         parserMessage={this.props.intentReducer.parserMessage}
                     />
-                    <p>For an explanation on how to create a valid Intent, see the {linkToHelp}</p>
+                    <IntentExplanation/>
                 </div>
             </div>
         );

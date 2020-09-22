@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { postIntent, validateIntent } from "../../actions/intentActions";
 import { Link, Redirect } from 'react-router-dom';
 import IntentInputField from "./IntentInputField";
+import IntentExplanation from "./IntentExplanation";
 
 
 class IntentCreation extends Component {
@@ -60,7 +61,7 @@ class IntentCreation extends Component {
                         initialValue="For "
                         parserMessage={this.props.parserMessage}
                     />
-                    <p>For an explanation on how to create a valid Intent, see the {linkToHelp}</p>
+                    <IntentExplanation/>
                 </div>
             </div>
         );
