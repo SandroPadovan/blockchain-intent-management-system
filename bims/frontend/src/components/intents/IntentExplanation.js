@@ -5,12 +5,13 @@ class IntentExplanation extends Component {
         return (
             <div className="mt-5">
                 <h3 className="mb-3">How do I create a valid Intent?</h3>
-                <p>An Intent is valid, if it adheres to the rules of a controlled language. The different parameters
-                    forming an Intent are shown below.</p>
-                <p>Each Intent starts with the word <mark>For</mark>. As Intents are translated into policies per user,
-                    a single <mark>User</mark> or a set of <mark>Users</mark> separated by <mark>,</mark> or <mark>and</mark> is defined.
-                </p>
-                <div>The next parameter is a Timeframe, which is <strong>optional</strong>. Allowed values are:
+                <div>
+                    <p>An Intent is valid, if it adheres to the rules of a controlled language. The different parameters
+                        forming an Intent are shown below.</p>
+                    <p>Each Intent starts with the word <mark>For</mark>. As Intents are translated into policies per user,
+                        a single <mark>User</mark> or a set of <mark>Users</mark> separated by <mark>,</mark> or <mark>and</mark> is defined.
+                    </p>
+                    The next parameter is a Timeframe, which is <strong>optional</strong>. Allowed values are:
                     <ul>
                         <li><mark>in the day</mark></li>
                         <li><mark>in the night</mark></li>
@@ -54,8 +55,7 @@ class IntentExplanation extends Component {
                         <li><mark>splitting</mark></li>
                         <li><mark>encryption</mark></li>
                     </ul>
-                </div>
-                <div>If you want a default policy, type <mark>as default</mark>. Otherwise, a cost interval,
+                    If you want a default policy, type <mark>as default</mark>. Otherwise, a cost interval,
                     a cost currency and a cost threshold can be specified here. Allowed values for an interval are:
                     <ul>
                         <li><mark>until the daily costs reach</mark></li>
@@ -72,6 +72,12 @@ class IntentExplanation extends Component {
                     If not specified, the default currency is USD.
                     <p>At the end, a threshold is specified as a number. Notice that a dot at the end of the intent is not valid.</p>
                 </div>
+                <h3 className="mt-4">Examples</h3>
+                <p>Here you find some examples for valid intents.</p>
+                <p><mark>For client1 select the cheapest private blockchain as default</mark></p>
+                <p><mark>For client2, client3 and client4 in the day select the fastest cheap blockchain except EOS with
+                    splitting until the daily costs reach CHF 50</mark></p>
+                <p><mark>For client5 in the night select Bitcoin as default</mark></p>
             </div>
         );
     }
