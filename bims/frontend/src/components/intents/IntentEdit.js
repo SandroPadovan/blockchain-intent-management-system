@@ -60,6 +60,7 @@ class IntentEdit extends Component {
                         onSubmit={this.updateIntent}
                         buttonText="Update"
                         initialValue={this.props.intentReducer.selectedIntent.intent_string}
+                        parserMessage={this.props.intentReducer.parserMessage}
                     />
                     <p>For an explanation on how to create a valid Intent, see the {linkToHelp}</p>
                 </div>

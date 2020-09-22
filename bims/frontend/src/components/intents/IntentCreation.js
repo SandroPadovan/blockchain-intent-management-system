@@ -58,6 +58,7 @@ class IntentCreation extends Component {
                         onSubmit={this.createIntent}
                         buttonText="Submit"
                         initialValue="For "
+                        parserMessage={this.props.parserMessage}
                     />
                     <p>For an explanation on how to create a valid Intent, see the {linkToHelp}</p>
                 </div>
