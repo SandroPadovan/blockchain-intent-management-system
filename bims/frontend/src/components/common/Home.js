@@ -16,16 +16,16 @@ class Home extends Component {
         }
 
         return (
-            <div className="jumbotron" style={{"backgroundColor": "transparent"}}>
-                <h2 className="text-center">Blockchain Intent Management System</h2>
-                <div className="col-md-6 m-auto">
-                    <div className="card card-body mt-5 text-center">
-                        <h4>Get started</h4>
-                        <div className="m-5">
-                            <Link to="/login" className="btn btn-primary btn-lg">Sign in</Link>
-                        </div>
-                        <div className="m-5">
-                            <Link to="/register" className="btn btn-primary btn-lg">Sign up</Link>
+            <div className="jumbotron d-flex align-items-center" style={{"backgroundColor": "transparent", "height": "75vh"}}>
+                <div className="d-flex flex-column">
+                    <div className="col-md-7">
+                        <h1 className="display-3">Blockchain Intent Management System</h1>
+                        <h3 className="mt-4">Intent-based Management for Blockchain Selection</h3>
+                        <div className="d-flex flex-row mt-5">
+                            <div>
+                                <Link to="/login" className="btn btn-primary btn-lg mr-5">Sign in</Link>
+                                <Link to="/register" className="btn btn-outline-primary btn-lg m-5">Sign up</Link>
+                            </div>
                         </div>
                     </div>
                 </div>
