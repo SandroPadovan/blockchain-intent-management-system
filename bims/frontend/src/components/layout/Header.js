@@ -52,7 +52,7 @@ class Header extends Component {
         );
 
         return (
-            <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+            <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top" style={{"zIndex": "0"}}>
                 <a className="navbar-brand" href="/">BIMS</a>
 
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#header"
