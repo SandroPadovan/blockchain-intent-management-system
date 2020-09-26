@@ -19,11 +19,12 @@ class IntentViewSet(viewsets.ModelViewSet):
     serializer_class = IntentSerializer
 
     def get_queryset(self):
-        """returns a queryset containing all intents"""
+        """returns a queryset containing all intents belonging to a user"""
         return self.request.user.intents.all()
 
     def create(self, request, *args, **kwargs):
-        """Passes the intent to the refiner. Saves the intent if valid and saves the policies"""
+        """Passes the intent to the refiner. Saves the intent if valid and saves the policies
+        If not valid, returns a response (status 400) with the error and expected words."""
         try:
             policies = refine_intent(request.data.get('intent_string'))
         except IllegalTransitionError as error:
@@ -56,14 +57,32 @@ class IntentViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
-        """updates an intent"""
+        """updates an intent, if valid.
+        If not valid, returns a response (status 400) with the error and expected words."""
         intent = Intent.objects.get(id=kwargs.get('pk'))
 
         # if intent user and request user don't match
         if request.user != intent.username:
             raise PermissionDenied
 
-        policies = refine_intent(request.data.get('intent_string'))
+        try:
+            policies = refine_intent(request.data.get('intent_string'))
+        except IllegalTransitionError as error:
+            return Response({
+                'message': error.message,
+                'expected': error.expected
+            }, status=status.HTTP_400_BAD_REQUEST)
+        except IncompleteIntentException as error:
+            return Response({
+                'message': error.message,
+                'expected': error.expected
+            }, status=status.HTTP_400_BAD_REQUEST)
+        except ValidationError as error:
+            return Response({
+                'message': error.message,
+                'expected': error.expected
+            }, status=status.HTTP_400_BAD_REQUEST)
+
         intent.intent_string = request.data.get('intent_string')
         intent.save()
 
