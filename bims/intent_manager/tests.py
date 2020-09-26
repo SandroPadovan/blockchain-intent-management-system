@@ -54,6 +54,20 @@ class IntentManagerTests(APITestCase):
         self.assertEqual(Intent.objects.count(), 1, 'Incorrect number of intents')
         self.assertEqual(Intent.objects.get().username.id, self.user_id, 'Incorrect user_id in intent')
 
+    def test_post_invalid_intent(self):
+        """test POST request of an invalid intent"""
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        intent = 'For client1 select the fastest Blockchain asd'
+        data = {'intent_string': intent}
+
+        response = self.client.post(self.url, data, format='json')
+        print(response.data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, 'Incorrect status code')
+        self.assertEqual(Intent.objects.count(), 0, 'Intent was created, although not valid')
+        self.assertTrue(len(response.data.get('expected')) != 0, 'Expected array is empty')
+
+
     def test_update_intent(self):
         """test PUT request to update an existing intent"""
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
