@@ -45,8 +45,6 @@ class IntentCreation extends Component {
             return <Redirect to="/overview"/>
         }
 
-        const linkToHelp = <Link to="/help">Help Page</Link>
-
         return (
             <div>
                 <Link to="/overview" className="btn btn-primary mt-4">Back</Link>

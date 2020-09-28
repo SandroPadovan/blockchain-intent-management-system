@@ -111,7 +111,6 @@ export const validateIntent = (intent) => (dispatch, getState) => {
     // returns a Promise, which resolves to a boolean whether the Intent is valid.
 
     const body = JSON.stringify({intent_string: intent});
-    console.log('Parse request sent.');
 
     return axios.post('/api/parser', body, constructHeaders(getState))
         .then(res => {
