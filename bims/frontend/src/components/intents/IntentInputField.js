@@ -8,6 +8,7 @@ class IntentInputField extends Component {
         intent: this.props.initialValue,
         suggestions: [],
         activeSuggestion: 0,
+        hasMistake: false,
     }
 
     static propTypes = {
@@ -39,6 +40,7 @@ class IntentInputField extends Component {
             activeSuggestion: 0
         }, () => {
             this.props.checkIfValid(this.state.intent);
+            this.onSuggestionsFetchRequested(this.state.intent)
         });
     }
 
@@ -91,9 +93,25 @@ class IntentInputField extends Component {
         const inputValue = value.trim().toLowerCase();
         const inputLength = inputValue.length;
 
-        return inputLength === 0 ? this.props.expected : this.props.expected.filter(exp =>
-            exp.toLowerCase().slice(0, inputLength) === inputValue
-        );
+        if (inputLength === 0 && this.props.parserMessage === 'Intent is incomplete') {
+            // if inputValue is a space, and the intent so far is valid, hasMistake is set to false
+            // all expected words are returned
+            if (this.state.hasMistake) {
+                this.setState({hasMistake: false});
+            }
+            return this.props.expected;
+        } else if(inputLength === 0 && this.props.parserMessage !== 'Intent is incomplete') {
+            // if inputValue is a space, and the intent so far is not valid, intent has a mistake
+            // returns an empty array
+            this.setState({hasMistake: true});
+            return [];
+        } else if (this.state.hasMistake) {
+            // if intent has a mistake, no suggestions shall be given, no matter what the user types
+            return [];
+        } else if (inputLength > 0 && this.props.parserMessage !== 'Intent is incomplete') {
+            // the user is typing a word, return filtered array with expected words
+            return this.props.expected.filter(exp => exp.toLowerCase().slice(0, inputLength) === inputValue)
+        } else return [];   // if none of the above conditions are met, no suggestions shall be given
     };
 
     // sets the suggestions state according to the user input
@@ -157,10 +175,10 @@ class IntentInputField extends Component {
                         autoComplete="off"
                     />
                     {isValid ? <div className="valid-feedback">Valid Intent</div> : <div/>}
-                    {this.props.expected.length === 0 ?
+                    {this.state.suggestions.length === 0 ?
                         <p className="text-danger">{this.props.parserMessage}</p> : suggestions}
                 </div>
-                <div className="text-right">
+                <div className="text-right mb-5">
                     <button
                         type="submit"
                         className="btn btn-primary"
