@@ -21,6 +21,10 @@ class IntentInputField extends Component {
         parserMessage: PropTypes.string.isRequired,
     }
 
+    componentDidMount() {
+        this.intentInput.focus();
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.intent && this.state.intent !== prevState.intent ||
         this.props.expected !== prevProps.expected) {
