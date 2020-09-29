@@ -74,11 +74,13 @@ class IntentInputField extends Component {
                 });
             }
         } else if (e.keyCode === 40) {   // Arrow Down
+            e.preventDefault();
             if (this.state.activeSuggestion + 1 === this.state.suggestions.length) {
                 return;
             }
             this.setState({ activeSuggestion: this.state.activeSuggestion + 1 });
         } else if (e.keyCode === 38) { // Arrow Up
+            e.preventDefault();
             if (this.state.activeSuggestion === 0) {
                 return;
             }
