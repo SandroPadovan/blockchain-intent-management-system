@@ -25,7 +25,7 @@ SECRET_KEY = '%lwks4*so&uqafr86mipxx#qz*r9(fsai#+8zg5td=-b9)sftp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['130.60.156.183']
 
 
 # Application definition
