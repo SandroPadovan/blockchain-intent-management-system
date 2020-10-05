@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
-import { withAlert } from 'react-alert';
-import { connect } from 'react-redux';
+import {withAlert} from 'react-alert';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 class Alerts extends Component {
@@ -12,7 +12,6 @@ class Alerts extends Component {
 
     componentDidUpdate(prevProps) {
         const {error, message, alert} = this.props;
-
         if (error !== prevProps.error) {
             if (error.msg.expected) alert.error(`Invalid Intent.`);
             if (error.msg.non_field_errors) alert.error(error.msg.non_field_errors.join());
@@ -21,12 +20,12 @@ class Alerts extends Component {
             if (error.msg.message) alert.error(error.msg.message);
 
         }
-
         if (message !== prevProps.message) {
             if (message.deleteIntent) alert.success(message.deleteIntent);
             if (message.createIntent) alert.success(message.createIntent);
             if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
             if (message.updateIntent) alert.success(message.updateIntent);
+            if (message.logout) alert.success(message.logout);
         }
 
     }
