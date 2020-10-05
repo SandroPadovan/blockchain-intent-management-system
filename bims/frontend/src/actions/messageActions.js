@@ -1,4 +1,4 @@
-import {CREATE_MESSAGE, GET_ERRORS, GET_MESSAGES} from "./types";
+import {CREATE_MESSAGE, GET_ERRORS} from './types';
 
 // Create Message
 export const createMessage = msg => {

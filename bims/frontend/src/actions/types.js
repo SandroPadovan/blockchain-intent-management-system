@@ -1,3 +1,5 @@
+// Redux action types
+
 export const USER_LOADED = 'USER_LOADED'
 export const USER_LOADING = 'USER_LOADING'
 export const AUTH_ERROR = 'AUTH_ERROR'
@@ -6,15 +8,17 @@ export const LOGIN_FAIL = 'LOGIN_FAIL'
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
 export const REGISTER_FAIL = 'REGISTER_FAIL'
+
 export const GET_INTENTS = 'GET_INTENTS'
 export const RETRIEVE_INTENT = 'RETRIEVE_INTENT'
 export const CREATE_INTENT = 'CREATE_INTENT'
 export const DELETE_INTENT = 'DELETE_INTENT'
 export const UPDATE_INTENT = 'UPDATE_INTENT'
-export const LOADING = 'LOADING'
 export const INTENT_ERROR = 'INTENT_ERROR'
 export const POLICY_SUCCESS = 'POLICY_SUCCESS'
 export const POLICY_FAIL = 'POLICY_FAIL'
+export const PARSE_INTENT = 'PARSE_INTENT'
+
+export const LOADING = 'LOADING'
 export const GET_ERRORS = 'GET_ERRORS'
 export const CREATE_MESSAGE = 'CREATE_MESSAGE'
-export const PARSE_INTENT = 'PARSE_INTENT'

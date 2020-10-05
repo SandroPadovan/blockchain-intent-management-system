@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link, Redirect } from 'react-router-dom';
-import { updateIntent, validateIntent } from '../../actions/intentActions';
-import IntentInputField from "./IntentInputField";
-import IntentExplanation from "./IntentExplanation";
+import {Redirect} from 'react-router-dom';
+import {updateIntent, validateIntent} from '../../actions/intentActions';
+import IntentInputField from './IntentInputField';
+import IntentExplanation from './IntentExplanation';
 
 
 class IntentEdit extends Component {
@@ -31,7 +31,10 @@ class IntentEdit extends Component {
                 } else {
                     this.setState({isValid: false});
                 }
-            }).catch(err => console.log(err))
+            }).catch(err => {
+            console.log(err);
+            this.setState({isValid: false});
+        })
     }
 
     updateIntent = (intent) => {
@@ -41,9 +44,7 @@ class IntentEdit extends Component {
     }
 
     render() {
-
-        const linkToHelp = <Link to="/help">Help Page</Link>;
-        const { redirectToOverview } = this.props.intentReducer;
+        const {redirectToOverview} = this.props.intentReducer;
 
         if (redirectToOverview) {
             return <Redirect to="/overview"/>;
@@ -74,5 +75,4 @@ const mapStateToProps = state => ({
     intentReducer: state.intentReducer,
 });
 
-
-export default connect(mapStateToProps, { updateIntent, validateIntent })(IntentEdit);
+export default connect(mapStateToProps, {updateIntent, validateIntent})(IntentEdit);

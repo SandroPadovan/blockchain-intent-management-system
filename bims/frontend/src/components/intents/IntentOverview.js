@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { getIntents } from "../../actions/intentActions";
-import { Link } from 'react-router-dom';
+import {getIntents} from '../../actions/intentActions';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Moment from 'moment';
 
 class IntentOverview extends Component {
@@ -31,7 +31,7 @@ class IntentOverview extends Component {
                         <tr>
                             <th scope="col">Intent</th>
                             <th scope="col">Created at</th>
-                            <th></th>
+                            <th/>
                         </tr>
                         </thead>
                         <tbody>
@@ -56,4 +56,4 @@ const mapStateToProps = (state) => ({
     intents: state.intentReducer.intents,
 });
 
-export default connect(mapStateToProps, { getIntents })(IntentOverview);
+export default connect(mapStateToProps, {getIntents})(IntentOverview);

@@ -3,13 +3,14 @@ import React, {Component} from 'react';
 class IntentExplanation extends Component {
     render() {
         return (
-            <div className="mt-5">
-                <h3 className="mb-3">How do I create a valid Intent?</h3>
+            <div>
+                <h4 className="mb-3">How do I create a valid Intent?</h4>
                 <div>
                     <p>An Intent is valid, if it adheres to the rules of a controlled language. The different parameters
                         forming an Intent are shown below.</p>
-                    <p>Each Intent starts with the word <mark>For</mark>. As Intents are translated into policies per user,
-                        a single <mark>User</mark> or a set of <mark>Users</mark> separated by <mark>,</mark> or <mark>and</mark> is defined.
+                    <p>Each Intent starts with the word <mark>For</mark>. As Intents are translated into policies per
+                        user, a single <mark>User</mark> or a set of <mark>Users</mark> separated by <mark>,</mark> or
+                        <mark>and</mark> is defined next.
                     </p>
                     The next parameter is a Timeframe, which is <strong>optional</strong>. Allowed values are:
                     <ul>
@@ -18,14 +19,14 @@ class IntentExplanation extends Component {
                         <li><mark>in the morning</mark></li>
                         <li><mark>in the afternoon</mark></li>
                     </ul>
-                    Next comes <mark>select</mark>, followed by either a profile or a blockchain. For supported blockchains, see below.
-                    Allowed values for a profile are:
+                    Next comes <mark>select</mark>, followed by either a profile or a blockchain. For supported
+                    blockchains, see below. Allowed values for a profile are:
                     <ul>
                         <li><mark>the cheapest</mark></li>
                         <li><mark>the fastest</mark></li>
                     </ul>
-                    Next, a set of <strong>optional</strong> filters can be specified separated by <mark>,</mark> or <mark>and</mark>.
-                    Allowed values are:
+                    Next, a set of <strong>optional</strong> filters can be specified separated by <mark>,</mark> or
+                    <mark>and</mark>. Allowed values are:
                     <ul>
                         <li><mark>private</mark></li>
                         <li><mark>public</mark></li>
@@ -35,7 +36,8 @@ class IntentExplanation extends Component {
                         <li><mark>popular</mark></li>
                     </ul>
                     The filters <mark>private</mark> and <mark>public</mark> are mutually exclusive, while the filters
-                    <mark>fast</mark> and <mark>cheap</mark> are only considered if combined with a corresponding profile.
+                    <mark>fast</mark> and <mark>cheap</mark> are only considered if combined with a corresponding
+                    profile.
                     <p>The filters are followed by the word <mark>blockchain</mark>.</p>
                     If a profile was specified, a Whitelist or a Blacklist can be specified. A Whitelist is specified by
                     <mark>from</mark>, a Blacklist by <mark>except</mark> followed by a set of blockchains separated by
@@ -46,10 +48,11 @@ class IntentExplanation extends Component {
                         <li><mark>Ethereum</mark></li>
                         <li><mark>Hyperledger</mark></li>
                         <li><mark>IOTA</mark></li>
-                        <li><mark>Multichain</mark></li>
+                        <li><mark>MultiChain</mark></li>
                         <li><mark>Stellar</mark></li>
                     </ul>
-                    Next, a set of <strong>optional</strong> modifiers can be specified separated by <mark>,</mark> or <mark>and</mark>. Allowed values are:
+                    Next, a set of <strong>optional</strong> modifiers can be specified separated by <mark>,</mark> or
+                    <mark>and</mark>. Allowed values are:
                     <ul>
                         <li><mark>redundancy</mark></li>
                         <li><mark>splitting</mark></li>
@@ -70,9 +73,10 @@ class IntentExplanation extends Component {
                         <li><mark>EUR</mark></li>
                     </ul>
                     If not specified, the default currency is USD.
-                    <p>At the end, a threshold is specified as a number. Notice that a dot at the end of the intent is not valid.</p>
+                    <p>At the end, a threshold is specified as a number. Notice that a dot at the end of the intent is
+                        not valid.</p>
                 </div>
-                <h3 className="mt-4">Examples</h3>
+                <h4 className="mt-4">Examples</h4>
                 <p>Here you find some examples for valid intents.</p>
                 <p><mark>For client1 select the cheapest private blockchain as default</mark></p>
                 <p><mark>For client2, client3 and client4 in the day select the fastest cheap blockchain except EOS with

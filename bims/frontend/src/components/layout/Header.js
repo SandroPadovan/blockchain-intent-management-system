@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import PropTypes from "prop-types";
-import { connect } from 'react-redux';
-import { logout } from "../../actions/auth";
-import { Link } from 'react-router-dom';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {logout} from '../../actions/auth';
+import {Link} from 'react-router-dom';
 
 
 class Header extends Component {
@@ -13,7 +13,7 @@ class Header extends Component {
     }
 
     render() {
-        const { isAuthenticated, user} = this.props.auth;
+        const {isAuthenticated, user} = this.props.auth;
 
         const LoggedIn = (
             <div className="w-100 d-flex justify-content-end">
@@ -71,4 +71,4 @@ const mapStateToProps = (state) => ({
     auth: state.auth,
 });
 
-export default connect(mapStateToProps, { logout })(Header);
+export default connect(mapStateToProps, {logout})(Header);

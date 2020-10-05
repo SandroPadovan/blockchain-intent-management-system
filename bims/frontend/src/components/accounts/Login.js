@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import {Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { login} from "../../actions/auth";
+import {login} from '../../actions/auth';
 
 class Login extends Component {
     state = {
@@ -20,7 +20,7 @@ class Login extends Component {
         this.props.login(this.state.username, this.state.password);
     }
 
-    onChange = e => this.setState({ [e.target.name]: e.target.value });
+    onChange = e => this.setState({[e.target.name]: e.target.value});
 
     render() {
         if (this.props.isAuthenticated) {
@@ -57,7 +57,8 @@ class Login extends Component {
                                 <button
                                     type="submit"
                                     className="btn btn-primary"
-                                >Login</button>
+                                >Login
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -71,4 +72,4 @@ const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, {login})(Login);

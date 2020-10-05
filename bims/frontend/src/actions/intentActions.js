@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { constructHeaders } from "./auth";
-import { createMessage, returnErrors } from "./messageActions";
-
+import {constructHeaders} from './auth';
+import {createMessage, returnErrors} from './messageActions';
 import {
     GET_INTENTS,
     RETRIEVE_INTENT,
@@ -15,9 +14,9 @@ import {
     PARSE_INTENT,
 } from './types';
 
-// GET intents
+// GET all intents of a user
 export const getIntents = () => (dispatch, getState) => {
-    dispatch({ type: LOADING });
+    dispatch({type: LOADING});
 
     axios.get('/api/intents/', constructHeaders(getState))
         .then(res => {
@@ -29,9 +28,9 @@ export const getIntents = () => (dispatch, getState) => {
 }
 
 
-// Retrieve an intent
+// Retrieve a single intent of a user
 export const retrieveIntent = (id) => (dispatch, getState) => {
-    dispatch({ type: LOADING });
+    dispatch({type: LOADING});
 
     axios.get(`/api/intents/${id}`, constructHeaders(getState))
         .then(res => {
@@ -40,9 +39,9 @@ export const retrieveIntent = (id) => (dispatch, getState) => {
                 payload: res.data
             })
         }).catch(err => {
-            dispatch({
-                type: INTENT_ERROR
-            })
+        dispatch({
+            type: INTENT_ERROR
+        })
     });
 }
 
@@ -55,7 +54,7 @@ export const deleteIntent = (id) => (dispatch, getState) => {
                 type: DELETE_INTENT
             })
         }).catch(err => {
-            console.log(err);
+        console.log(err);
     })
 }
 
@@ -69,9 +68,9 @@ export const getPolicies = (id) => (dispatch, getState) => {
                 payload: res.data
             })
         }).catch(err => {
-            dispatch({
-                type: POLICY_FAIL
-            })
+        dispatch({
+            type: POLICY_FAIL
+        })
     });
 }
 

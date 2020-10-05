@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link, Redirect } from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 
 class Home extends Component {
 
     static propTypes = {
-            isAuthenticated: PropTypes.bool
+        isAuthenticated: PropTypes.bool
     }
 
     render() {
@@ -16,7 +16,8 @@ class Home extends Component {
         }
 
         return (
-            <div className="jumbotron d-flex align-items-center" style={{"backgroundColor": "transparent", "height": "75vh"}}>
+            <div className="jumbotron d-flex align-items-center"
+                 style={{"backgroundColor": "transparent", "height": "75vh"}}>
                 <div className="d-flex flex-column">
                     <div className="col-md-7">
                         <h1 className="display-3">Blockchain Intent Management System</h1>
@@ -37,6 +38,5 @@ class Home extends Component {
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated
 });
-
 
 export default connect(mapStateToProps)(Home);

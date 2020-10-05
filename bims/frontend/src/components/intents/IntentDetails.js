@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { retrieveIntent, deleteIntent } from "../../actions/intentActions";
+import {connect} from 'react-redux';
+import {retrieveIntent, deleteIntent} from '../../actions/intentActions';
 import Moment from 'moment';
 import Policies from "./Policies";
-import { Link, Redirect } from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 
 
 class IntentDetails extends Component {
@@ -24,11 +24,9 @@ class IntentDetails extends Component {
 
         if (isLoading) {
             return <h2>Loading...</h2>
-        }
-        else if (redirectToOverview) {
+        } else if (redirectToOverview) {
             return <Redirect to="/overview"/>;
-        }
-        else {
+        } else {
             const modal = (
                 <div className="modal fade" id="confirmDelete">
                     <div className="modal-dialog" role="document">
@@ -41,7 +39,10 @@ class IntentDetails extends Component {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-danger" data-dismiss="modal"
-                                        onClick={() => {this.props.deleteIntent(selectedIntent.id)}}>Delete</button>
+                                        onClick={() => {
+                                            this.props.deleteIntent(selectedIntent.id)
+                                        }}>Delete
+                                </button>
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
                             </div>
                         </div>
@@ -58,9 +59,11 @@ class IntentDetails extends Component {
                                 <h3>Intent Details</h3>
                             </div>
                             <div className="col-6 text-right">
-                                <Link to={`/intent/${selectedIntent.id}/edit`} className="btn btn-outline-primary m-3">Edit</Link>
+                                <Link to={`/intent/${selectedIntent.id}/edit`}
+                                      className="btn btn-outline-primary m-3">Edit</Link>
                                 <button className="btn btn-outline-danger m-3" data-toggle="modal"
-                                        data-target="#confirmDelete">Delete</button>
+                                        data-target="#confirmDelete">Delete
+                                </button>
                                 {modal}
                             </div>
                         </div>
@@ -85,7 +88,7 @@ class IntentDetails extends Component {
                                 <h5>Updated at:</h5>
                             </div>
                             <div className="col-9">
-                                <p>{selectedIntent.created_at != selectedIntent.updated_at ?
+                                <p>{selectedIntent.created_at !== selectedIntent.updated_at ?
                                     Moment(selectedIntent.updated_at).format('DD.MM.YY HH:mm')
                                     : '-'}</p>
                             </div>
@@ -103,4 +106,4 @@ const mapStateToProps = (state) => ({
     intentReducer: state.intentReducer,
 });
 
-export default connect(mapStateToProps, { retrieveIntent, deleteIntent })(IntentDetails);
+export default connect(mapStateToProps, {retrieveIntent, deleteIntent})(IntentDetails);

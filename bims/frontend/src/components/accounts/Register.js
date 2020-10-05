@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import {Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { register } from "../../actions/auth";
-import { createMessage } from "../../actions/messageActions";
+import {register} from '../../actions/auth';
+import {createMessage} from '../../actions/messageActions';
 
 class Register extends Component {
     state = {
-        username: "",
-        password: "",
-        passwordConfirmation: "",
+        username: '',
+        password: '',
+        passwordConfirmation: '',
     }
 
     static propTypes = {
@@ -20,15 +20,15 @@ class Register extends Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const { password, passwordConfirmation } = this.state;
+        const {password, passwordConfirmation} = this.state;
         if (password !== passwordConfirmation) {
-            this.props.createMessage({ passwordNotMatch: 'Passwords do not match' });
+            this.props.createMessage({passwordNotMatch: 'Passwords do not match'});
         } else {
             this.props.register(this.state.username, this.state.password);
         }
     }
 
-    onChange = e => this.setState({ [e.target.name]: e.target.value });
+    onChange = e => this.setState({[e.target.name]: e.target.value});
 
     render() {
         if (this.props.isAuthenticated) {
@@ -75,7 +75,8 @@ class Register extends Component {
                                 <button
                                     type="submit"
                                     className="btn btn-primary"
-                                >Create Account</button>
+                                >Create Account
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -89,4 +90,4 @@ const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps, { register, createMessage })(Register);
+export default connect(mapStateToProps, {register, createMessage})(Register);

@@ -27,7 +27,7 @@ class IntentInputField extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.intent && this.state.intent !== prevState.intent ||
-        this.props.expected !== prevProps.expected) {
+            this.props.expected !== prevProps.expected) {
             this.onSuggestionsFetchRequested(this.state.intent)
         }
     }
@@ -52,7 +52,7 @@ class IntentInputField extends Component {
     onClick = e => {
 
         // validPart is equal to the user input without the last word
-        const validPart = this.state.intent.split(" ").slice(0,-1).join(" ");
+        const validPart = this.state.intent.split(" ").slice(0, -1).join(" ");
 
         // intent is set as the validPart plus the suggestion clicked on
         this.setState({intent: validPart + " " + e.currentTarget.innerText}, () => {
@@ -67,7 +67,7 @@ class IntentInputField extends Component {
     onKeyDown = e => {
         if (e.keyCode === 9 || e.keyCode === 13) {  // Tab or Enter
             e.preventDefault();
-            const validPart = this.state.intent.split(" ").slice(0,-1).join(" ");
+            const validPart = this.state.intent.split(" ").slice(0, -1).join(" ");
             const activeSuggestion = this.state.suggestions[this.state.activeSuggestion]
             if (activeSuggestion) {
                 this.setState({
@@ -82,13 +82,13 @@ class IntentInputField extends Component {
             if (this.state.activeSuggestion + 1 === this.state.suggestions.length) {
                 return;
             }
-            this.setState({ activeSuggestion: this.state.activeSuggestion + 1 });
-        } else if (e.keyCode === 38) { // Arrow Up
+            this.setState({activeSuggestion: this.state.activeSuggestion + 1});
+        } else if (e.keyCode === 38) {   // Arrow Up
             e.preventDefault();
             if (this.state.activeSuggestion === 0) {
                 return;
             }
-            this.setState({ activeSuggestion: this.state.activeSuggestion - 1 });
+            this.setState({activeSuggestion: this.state.activeSuggestion - 1});
         }
         this.intentInput.focus();
     }
@@ -106,7 +106,7 @@ class IntentInputField extends Component {
                 this.setState({hasMistake: false});
             }
             return this.props.expected;
-        } else if(inputLength === 0 && this.props.parserMessage !== 'Intent is incomplete') {
+        } else if (inputLength === 0 && this.props.parserMessage !== 'Intent is incomplete') {
             // if inputValue is a space, and the intent so far is not valid, intent has a mistake
             // returns an empty array
             this.setState({hasMistake: true});
@@ -121,7 +121,7 @@ class IntentInputField extends Component {
     };
 
     // sets the suggestions state according to the user input
-    onSuggestionsFetchRequested = ( intent ) => {
+    onSuggestionsFetchRequested = (intent) => {
         this.setState({
             suggestions: this.getSuggestions(intent)
         });
@@ -130,10 +130,10 @@ class IntentInputField extends Component {
 
     render() {
 
-        const { isValid } = this.props;
-        const { intent, activeSuggestion } = this.state;
+        const {isValid} = this.props;
+        const {intent, activeSuggestion} = this.state;
 
-        // styling: CSS classNames depending on whether the intent is valid or not
+        // styling: classNames depending on whether the intent is valid or not
         let classNameFormGroup;
         let classNameInput;
         if (isValid) {
@@ -154,7 +154,7 @@ class IntentInputField extends Component {
                         } else {
                             classNameSuggestion = "list-group-item d-flex justify-content-between align-items-center"
                         }
-                        return(
+                        return (
                             <li
                                 key={suggestion}
                                 className={classNameSuggestion}
@@ -170,7 +170,9 @@ class IntentInputField extends Component {
             <form onSubmit={this.onSubmit}>
                 <div className={classNameFormGroup}>
                     <input
-                        ref={(input) => { this.intentInput = input; }}
+                        ref={(input) => {
+                            this.intentInput = input;
+                        }}
                         type="text"
                         value={intent}
                         name="intent"

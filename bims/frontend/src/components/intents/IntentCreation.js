@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
+import {Link, Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { postIntent, validateIntent } from "../../actions/intentActions";
-import { Link, Redirect } from 'react-router-dom';
-import IntentInputField from "./IntentInputField";
-import IntentExplanation from "./IntentExplanation";
+import {postIntent, validateIntent} from '../../actions/intentActions';
+import IntentInputField from './IntentInputField';
+import IntentExplanation from './IntentExplanation';
 
 
 class IntentCreation extends Component {
@@ -73,4 +73,4 @@ const mapStateToProps = state => ({
 })
 
 
-export default connect(mapStateToProps, { postIntent, validateIntent })(IntentCreation);
+export default connect(mapStateToProps, {postIntent, validateIntent})(IntentCreation);

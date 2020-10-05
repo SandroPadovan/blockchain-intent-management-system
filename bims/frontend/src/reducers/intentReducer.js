@@ -18,7 +18,7 @@ const initialState = {
     isLoading: false,
     redirectToOverview: false,
     expected: [],
-    parserMessage: "",
+    parserMessage: '',
 }
 
 export default function (state = initialState, action) {
