@@ -126,5 +126,12 @@ export const validateIntent = (intent) => (dispatch, getState) => {
             }
             return res.status === 204;
         })
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch({
+                type: PARSE_INTENT,
+                payload: {expected: [], message: 'Something went wrong...'}
+            });
+            return false;
+        });
 }

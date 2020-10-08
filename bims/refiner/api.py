@@ -5,6 +5,7 @@ from .refiner import refine_intent
 from refiner.irtk.parser.state import IllegalTransitionError
 from refiner.irtk.incompleteIntentException import IncompleteIntentException
 from refiner.irtk.validation import ValidationError
+from .models import Currency
 
 
 class IntentParserAPI(generics.GenericAPIView):
@@ -32,5 +33,10 @@ class IntentParserAPI(generics.GenericAPIView):
                 'message': error.message,
                 'expected': error.expected
             }, status=status.HTTP_200_OK)
+        except Currency.DoesNotExist:
+            return Response({
+                'message': 'Currency was not found',
+                'expected': []
+            }, status=status.HTTP_404_NOT_FOUND)
 
         return Response(status=status.HTTP_204_NO_CONTENT)

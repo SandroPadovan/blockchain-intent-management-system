@@ -1,4 +1,5 @@
 from intent_manager.models import Intent
+from refiner.models import Currency
 from .serializers import IntentSerializer
 from refiner.refiner import refine_intent, save_policies, update_policies
 from refiner.irtk.parser.state import IllegalTransitionError
@@ -42,6 +43,11 @@ class IntentViewSet(viewsets.ModelViewSet):
                 'message': error.message,
                 'expected': error.expected
             }, status=status.HTTP_400_BAD_REQUEST)
+        except Currency.DoesNotExist:
+            return Response({
+                'message': 'Currency was not found',
+                'expected': []
+            }, status=status.HTTP_404_NOT_FOUND)
 
         intent = Intent(username=request.user,
                         intent_string=request.data.get('intent_string'))
