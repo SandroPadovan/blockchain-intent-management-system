@@ -1,4 +1,5 @@
 from django.test import TestCase
+import time
 
 from .refiner import refine_intent, save_policies, update_policies
 
@@ -113,6 +114,8 @@ class RefinerPolicyManipulationTests(TestCase):
         irtk_policy1 = irtk_policy_factory('client1', 19)
         irtk_policy2 = irtk_policy_factory('client2', 12)
         policy_list = [irtk_policy1, irtk_policy2]
+
+        time.sleep(0.01)    # test was flaky when comparing timestamps
 
         update_policies(policy_list, self.intent.id)
 
