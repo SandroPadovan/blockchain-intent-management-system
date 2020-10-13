@@ -11,7 +11,7 @@ class PleBeuS:
     headers = {'Content-Type': 'application/json'}
 
     @staticmethod
-    def map_blockchain_pool(policy) -> list:
+    def __map_blockchain_pool(policy) -> list:
         blockchains = {'bitcoin': 'BTC',
                        'ethereum': 'ETH',
                        'eos': 'EOS',
@@ -23,13 +23,12 @@ class PleBeuS:
         preferredBC = []
         for bc in policy.blockchain_pool:
             preferredBC.append(blockchains[bc.value])
-        print(preferredBC)
         return preferredBC
 
-    def construct_policy_data(self, policy, pbs_id: str):
+    def __construct_policy_data(self, policy, pbs_id: str):
         """Maps a Policy to a JSON object for requests to PleBeuS."""
         return json.dumps({
-            'preferredBC': self.map_blockchain_pool(policy),
+            'preferredBC': self.__map_blockchain_pool(policy),
             'currency': policy.currency.name,
             'bcTuringComplete': policy.turing_complete,
             'split': policy.split_txs,
@@ -47,7 +46,7 @@ class PleBeuS:
         })
 
     @staticmethod
-    def construct_default_policy_data(user: str):
+    def __construct_default_policy_data(user: str):
         return json.dumps({
             'preferredBC': [],
             'currency': 'USD',
@@ -67,7 +66,7 @@ class PleBeuS:
         })
 
     @staticmethod
-    def is_default_policy(policy) -> bool:
+    def __is_default_policy(policy) -> bool:
         """Helper function, returns boolean if policy is a default policy or not"""
         return policy.interval.value == 'default'
 
@@ -79,19 +78,19 @@ class PleBeuS:
         try:
             get_user_response = requests.get(self.pbs_url + '/policies/' + policy.user)
 
-            if get_user_response.status_code == 404 and not self.is_default_policy(policy):
+            if get_user_response.status_code == 404 and not self.__is_default_policy(policy):
                 # need to create a default policy first
                 default_policy_response = requests.post(self.pbs_url + '/api/policies',
-                                                        self.construct_default_policy_data(policy.user),
+                                                        self.__construct_default_policy_data(policy.user),
                                                         headers=self.headers)
                 if default_policy_response.status_code != 201:
                     # error when creating default policy
                     raise PlebeusException(json.loads(default_policy_response.text).get('message'))
 
-            if get_user_response.status_code == 200 and self.is_default_policy(policy):
+            if get_user_response.status_code == 200 and self.__is_default_policy(policy):
                 raise PlebeusException('Default Policy for this user already exists')
 
-            data = self.construct_policy_data(policy, pbs_id)
+            data = self.__construct_policy_data(policy, pbs_id)
 
             response = requests.post(self.pbs_url + '/api/policies', data, headers=self.headers)
             if response.status_code != 201:
