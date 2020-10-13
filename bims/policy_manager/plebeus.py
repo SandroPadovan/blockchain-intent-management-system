@@ -1,3 +1,4 @@
+from django.conf import settings
 import requests
 import json
 from .plebeusException import PlebeusException
@@ -6,8 +7,7 @@ from requests.exceptions import ConnectionError
 
 class PleBeuS:
 
-    # TODO: config file?
-    pbs_url = 'http://130.60.156.183:3000'
+    pbs_url = settings.PLEBEUS_URL
     headers = {'Content-Type': 'application/json'}
 
     @staticmethod
@@ -74,6 +74,8 @@ class PleBeuS:
     def save_policy(self, policy, pbs_id: str):
         """Makes a POST request to PleBeuS. Either creates a new Policy or updates an existing one if a pbs_id is
         provided. """
+        if not settings.USE_PLEBEUS:
+            return
         try:
             get_user_response = requests.get(self.pbs_url + '/policies/' + policy.user)
 
@@ -99,6 +101,8 @@ class PleBeuS:
 
     def delete_policy(self, pbs_id: str) -> None:
         """Makes a DELETE request to PleBeuS."""
+        if not settings.USE_PLEBEUS:
+            return
         try:
             # make request
             response = requests.delete(self.pbs_url + '/api/policy/' + pbs_id)
