@@ -6,6 +6,7 @@ from .policy_manager import PolicyManager
 
 class Policy(models.Model):
     intent_id = models.ForeignKey(Intent, on_delete=models.CASCADE)
+    pbs_id = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.CharField(max_length=100)
