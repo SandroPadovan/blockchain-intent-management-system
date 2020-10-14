@@ -1,10 +1,14 @@
 from intent_manager.models import Intent
 from refiner.models import Currency
+from policy_manager.models import Policy
+
 from .serializers import IntentSerializer
 from refiner.refiner import refine_intent, save_policies, update_policies
 from refiner.irtk.parser.state import IllegalTransitionError
 from refiner.irtk.incompleteIntentException import IncompleteIntentException
 from refiner.irtk.validation import ValidationError
+from policy_manager.plebeusException import PlebeusException
+from policy_manager.plebeus import PleBeuS
 
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
@@ -101,3 +105,24 @@ class IntentViewSet(viewsets.ModelViewSet):
             'intent_string': intent.intent_string,
             'username': intent.username.id
         }, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        """Deletes intent. Also deletes all policies in PleBeuS created from this intent."""
+
+        plebeus = PleBeuS()
+        intent = Intent.objects.get(id=kwargs.get('pk'))
+        policies = Policy.objects.filter(intent_id=intent.id)
+
+        # delete all PleBeuS policies corresponding to this intent
+        try:
+            for policy in policies:
+                plebeus.delete_policy(policy.pbs_id)
+        except PlebeusException as error:
+            return Response({
+                'message': error.message,
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # delete intent
+        intent.delete()
+
+        return Response(None, status=status.HTTP_204_NO_CONTENT)

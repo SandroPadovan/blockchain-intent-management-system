@@ -103,9 +103,6 @@ class PleBeuS:
         if not settings.USE_PLEBEUS:
             return
         try:
-            # make request
-            response = requests.delete(self.pbs_url + '/api/policy/' + pbs_id)
-            if response.status_code != 200:
-                raise PlebeusException(json.loads(response.text).get('message'))
+            requests.delete(self.pbs_url + '/api/policy/' + pbs_id)
         except ConnectionError:
             raise PlebeusException('Connection to PleBeuS failed')
