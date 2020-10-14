@@ -75,17 +75,27 @@ class IntentViewSet(viewsets.ModelViewSet):
             raise PermissionDenied
 
         try:
+            # refine new intent
             policies = refine_intent(request.data.get('intent_string'))
         except (IllegalTransitionError, IncompleteIntentException, ValidationError) as error:
+            # invalid intent
             return Response({
                 'message': error.message,
                 'expected': error.expected
             }, status=status.HTTP_400_BAD_REQUEST)
 
+        # update intent
         intent.intent_string = request.data.get('intent_string')
-        intent.save()
 
-        update_policies(policies, intent.id)
+        try:
+            # update policies of this intent
+            update_policies(policies, intent.id)
+        except PlebeusException as error:
+            return Response({
+                'message': error.message
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        intent.save()
 
         return Response({
             'id': intent.id,

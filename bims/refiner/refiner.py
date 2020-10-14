@@ -3,6 +3,7 @@ from typing import List, Optional
 from .irtk import refine
 from policy_manager.models import Policy
 from refiner.irtk.refiner import Policy as irtkPolicy
+from policy_manager.plebeus import PleBeuS
 import pickle
 
 
@@ -20,16 +21,19 @@ def save_policies(policies: list, intent_id: int) -> None:
 
 def update_policies(new_policies: List[irtkPolicy], intent_id: int) -> None:
     """Updates existing policies. In case the number of policies corresponding to an intent changes,
-    policies are added or deleted."""
+    policies are added or deleted. Also updates policies in PleBeuS."""
     old_policies = Policy.objects.filter(intent_id=intent_id)   # get policies with the corresponding intent_id
     num_old_policies = len(old_policies)
     num_new_policies = len(new_policies)
+
+    plebeus = PleBeuS()
 
     if num_old_policies <= num_new_policies:     # possibly need to create additional policies
 
         # update existing policies
         for i in range(len(old_policies)):
             updated = overwrite_policy_fields(old_policies[i], new_policies[i], intent_id)
+            plebeus.save_policy(new_policies[i], old_policies[i].pbs_id)
             updated.save()
 
         # possibly create new policies
@@ -43,6 +47,7 @@ def update_policies(new_policies: List[irtkPolicy], intent_id: int) -> None:
         j = num_old_policies - num_new_policies     # number of old policies to be deleted
         for i in range(j):
             p = Policy.objects.filter(intent_id=intent_id).first()
+            plebeus.delete_policy(p.pbs_id)
             p.delete()
 
         # update remaining policies
@@ -50,6 +55,7 @@ def update_policies(new_policies: List[irtkPolicy], intent_id: int) -> None:
         i = 0
         for policy in new_policies:
             updated = overwrite_policy_fields(remaining_policies[i], policy, intent_id)
+            plebeus.save_policy(policy, updated.pbs_id)
             updated.save()
             i += 1
 
