@@ -31,18 +31,9 @@ class IntentViewSet(viewsets.ModelViewSet):
         """Passes the intent to the refiner. Saves the intent if valid and saves the policies
         If not valid, returns a response (status 400) with the error and expected words."""
         try:
+            # refine intent
             policies = refine_intent(request.data.get('intent_string'))
-        except IllegalTransitionError as error:
-            return Response({
-                'message': error.message,
-                'expected': error.expected
-            }, status=status.HTTP_400_BAD_REQUEST)
-        except IncompleteIntentException as error:
-            return Response({
-                'message': error.message,
-                'expected': error.expected
-            }, status=status.HTTP_400_BAD_REQUEST)
-        except ValidationError as error:
+        except (IllegalTransitionError, IncompleteIntentException, ValidationError) as error:
             return Response({
                 'message': error.message,
                 'expected': error.expected
@@ -55,8 +46,16 @@ class IntentViewSet(viewsets.ModelViewSet):
 
         intent = Intent(username=request.user,
                         intent_string=request.data.get('intent_string'))
-        intent.save()
-        save_policies(policies, intent.id)
+        try:
+            intent.save()
+            save_policies(policies, intent.id)
+        except PlebeusException as error:
+            # delete new intent if there is an error with PleBeuS
+            intent.delete()
+            return Response({
+                'message': error.message,
+                'expected': []
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({
             'id': intent.id,
@@ -77,17 +76,7 @@ class IntentViewSet(viewsets.ModelViewSet):
 
         try:
             policies = refine_intent(request.data.get('intent_string'))
-        except IllegalTransitionError as error:
-            return Response({
-                'message': error.message,
-                'expected': error.expected
-            }, status=status.HTTP_400_BAD_REQUEST)
-        except IncompleteIntentException as error:
-            return Response({
-                'message': error.message,
-                'expected': error.expected
-            }, status=status.HTTP_400_BAD_REQUEST)
-        except ValidationError as error:
+        except (IllegalTransitionError, IncompleteIntentException, ValidationError) as error:
             return Response({
                 'message': error.message,
                 'expected': error.expected

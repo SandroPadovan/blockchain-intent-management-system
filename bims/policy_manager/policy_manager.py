@@ -1,4 +1,5 @@
 from django.db import models
+from policy_manager.plebeus import PleBeuS
 import pickle
 
 
@@ -10,8 +11,13 @@ class PolicyManager(models.Manager):
         Creates a Policy and stores it in the database. Takes the output of the IRTK and
         an intent_id as a foreign key to the parent intent as input. Returns the created policy.
         """
+
+        pbs = PleBeuS()
+
+        pbs_id = pbs.save_policy(raw_policy, '')
         policy = self.create(
             intent_id_id=intent_id,
+            pbs_id=pbs_id,
             user=raw_policy.user,
             cost_profile=str(raw_policy.cost_profile),
             timeframe_start=str(raw_policy.timeframe_start),

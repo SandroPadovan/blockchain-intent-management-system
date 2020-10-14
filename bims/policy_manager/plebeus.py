@@ -70,11 +70,11 @@ class PleBeuS:
         """Helper function, returns boolean if policy is a default policy or not"""
         return policy.interval.value == 'default'
 
-    def save_policy(self, policy, pbs_id: str):
+    def save_policy(self, policy, pbs_id: str) -> str:
         """Makes a POST request to PleBeuS. Either creates a new Policy or updates an existing one if a pbs_id is
-        provided. """
+        provided. Returns the pbs_id"""
         if not settings.USE_PLEBEUS:
-            return
+            return ''
         try:
             get_user_response = requests.get(self.pbs_url + '/policies/' + policy.user)
 
@@ -95,6 +95,7 @@ class PleBeuS:
             response = requests.post(self.pbs_url + '/api/policies', data, headers=self.headers)
             if response.status_code != 201:
                 raise PlebeusException(json.loads(response.text).get('message'))
+            return json.loads(response.text).get('policy').get('_id')
         except ConnectionError:
             raise PlebeusException('Connection to PleBeuS failed')
 
