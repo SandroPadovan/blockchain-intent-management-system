@@ -66,16 +66,20 @@ class IntentViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
-        """updates an intent, if valid.
-        If not valid, returns a response (status 400) with the error and expected words."""
-        intent = Intent.objects.get(id=kwargs.get('pk'))
+        """Updates an intent and its policies, if valid. Also updates policies in PleBeuS.
+        If not valid, returns a response (status 400) with the error and expected words. Returns an error response if
+        default intent is updated to a non-default intent. If successful, returns the updated intent.
+        """
+
+        intent_id = kwargs.get('pk')
+        intent = Intent.objects.get(id=intent_id)
 
         # if intent user and request user don't match
         if request.user != intent.username:
             raise PermissionDenied
 
+        # refine new intent
         try:
-            # refine new intent
             policies = refine_intent(request.data.get('intent_string'))
         except (IllegalTransitionError, IncompleteIntentException, ValidationError) as error:
             # invalid intent
@@ -84,17 +88,25 @@ class IntentViewSet(viewsets.ModelViewSet):
                 'expected': error.expected
             }, status=status.HTTP_400_BAD_REQUEST)
 
+        # prevent changes from default policy to non-default policy
+        old_policies = Policy.objects.filter(intent_id=intent_id)
+        if old_policies[0].interval == 'Interval.DEFAULT' and policies[0].interval != Interval.DEFAULT:
+            return Response({
+                'message': 'Cannot change default Policy to non-default Policy',
+            }, status=status.HTTP_400_BAD_REQUEST)
+
         # update intent
         intent.intent_string = request.data.get('intent_string')
 
+        # update policies of this intent
         try:
-            # update policies of this intent
             update_policies(policies, intent.id)
         except PlebeusException as error:
             return Response({
                 'message': error.message
             }, status=status.HTTP_400_BAD_REQUEST)
 
+        # save intent to database
         intent.save()
 
         return Response({
