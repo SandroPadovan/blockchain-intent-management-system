@@ -9,12 +9,15 @@ class PolicyManager(models.Manager):
     def create_policy(self, raw_policy, intent_id):
         """
         Creates a Policy and stores it in the database. Takes the output of the IRTK and
-        an intent_id as a foreign key to the parent intent as input. Returns the created policy.
+        an intent_id as a foreign key to the parent intent as input.
+        Also saves the policy to PleBeuS. The id of the policy in PleBeuS is also stored.
+        Returns the created policy.
         """
 
+        # save policy to PleBeuS
         pbs = PleBeuS()
-
         pbs_id = pbs.save_policy(raw_policy, '')
+
         policy = self.create(
             intent_id_id=intent_id,
             pbs_id=pbs_id,

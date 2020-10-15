@@ -7,6 +7,7 @@ from refiner.refiner import refine_intent, save_policies, update_policies
 from refiner.irtk.parser.state import IllegalTransitionError
 from refiner.irtk.incompleteIntentException import IncompleteIntentException
 from refiner.irtk.validation import ValidationError
+from refiner.irtk.policy import Interval
 from policy_manager.plebeusException import PlebeusException
 from policy_manager.plebeus import PleBeuS
 
@@ -17,7 +18,7 @@ from django.core.exceptions import PermissionDenied
 
 
 class IntentViewSet(viewsets.ModelViewSet):
-    """ViewSets offer CRUD functionality without having to specify explicit methods for creating, retrieving etc."""
+    """ModelViewSet for Intent. Handles CRUD operations and responses of the API"""
     permission_classes = [
         permissions.IsAuthenticated
     ]
@@ -28,10 +29,13 @@ class IntentViewSet(viewsets.ModelViewSet):
         return self.request.user.intents.all()
 
     def create(self, request, *args, **kwargs):
-        """Passes the intent to the refiner. Saves the intent if valid and saves the policies
-        If not valid, returns a response (status 400) with the error and expected words."""
+        """Passes the intent to the refiner. Saves the intent and the policies if valid.
+        If not valid, returns a response (status 400) with the error and expected words. If successful, returns the
+        new intent.
+        """
+
+        # refine intent
         try:
-            # refine intent
             policies = refine_intent(request.data.get('intent_string'))
         except (IllegalTransitionError, IncompleteIntentException, ValidationError) as error:
             return Response({
@@ -46,11 +50,14 @@ class IntentViewSet(viewsets.ModelViewSet):
 
         intent = Intent(username=request.user,
                         intent_string=request.data.get('intent_string'))
+
+        # save intent and policies
         try:
             intent.save()
             save_policies(policies, intent.id)
         except PlebeusException as error:
-            # delete new intent if there is an error with PleBeuS
+            # delete new intent if there is an error with PleBeuS.
+            # already created policies are also deleted if the intent is deleted.
             intent.delete()
             return Response({
                 'message': error.message,
@@ -118,7 +125,7 @@ class IntentViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
-        """Deletes intent. Also deletes all policies in PleBeuS created from this intent."""
+        """Deletes intent and its policies. Also deletes all policies in PleBeuS created from this intent."""
 
         plebeus = PleBeuS()
         intent = Intent.objects.get(id=kwargs.get('pk'))
