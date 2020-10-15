@@ -9,6 +9,7 @@ from .models import Currency
 
 
 class IntentParserAPI(generics.GenericAPIView):
+    """Implements the Parser API to parse an Intent for text suggestions."""
     permission_classes = [
         permissions.IsAuthenticated
     ]
@@ -16,19 +17,13 @@ class IntentParserAPI(generics.GenericAPIView):
 
     @staticmethod
     def post(request, *args, **kwargs):
+        """Handles POST requests. If intent is not valid, returns status 200 with expected words.
+        If Intent is valid, returns status 204.
+        """
         try:
             refine_intent(request.data.get('intent_string'))
-        except IllegalTransitionError as error:
-            return Response({
-                'message': error.message,
-                'expected': error.expected
-            }, status=status.HTTP_200_OK)
-        except IncompleteIntentException as error:
-            return Response({
-                'message': error.message,
-                'expected': error.expected
-            }, status=status.HTTP_200_OK)
-        except ValidationError as error:
+        except (IllegalTransitionError, IncompleteIntentException, ValidationError) as error:
+            # Intent is not valid
             return Response({
                 'message': error.message,
                 'expected': error.expected
@@ -39,4 +34,5 @@ class IntentParserAPI(generics.GenericAPIView):
                 'expected': []
             }, status=status.HTTP_404_NOT_FOUND)
 
+        # Intent is valid
         return Response(status=status.HTTP_204_NO_CONTENT)
