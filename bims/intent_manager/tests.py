@@ -1,5 +1,6 @@
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
+from django.test import override_settings
 from intent_manager.models import Intent
 from user_manager.models import User
 from refiner.models import Currency
@@ -7,6 +8,7 @@ from policy_manager.models import Policy
 import time
 
 
+@override_settings(USE_PLEBEUS=False)
 class IntentManagerTests(APITestCase):
 
     client = APIClient

@@ -1,5 +1,6 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
+from django.test import override_settings
 
 from refiner.models import Currency
 from intent_manager.models import Intent
@@ -16,6 +17,7 @@ class IntegrationTests(APITestCase):
         chf.save()
         eur.save()
 
+    @override_settings(USE_PLEBEUS=False)
     def test_integration_test(self):
         # register a user and log in
         credentials = {'username': 'testUser0',

@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 import time
 
 from .refiner import refine_intent, save_policies, update_policies
@@ -12,6 +12,7 @@ from refiner.irtk.policy import Policy as irtkPolicy, CostProfile, Interval, Blo
     Time
 
 
+@override_settings(USE_PLEBEUS=False)
 class RefinementTests(TestCase):
 
     def setUp(self) -> None:
@@ -50,6 +51,7 @@ class RefinementTests(TestCase):
         self.assertEqual(len(policies), 3, 'Not 3 policy were created')
 
 
+@override_settings(USE_PLEBEUS=False)
 class RefinerPolicyManipulationTests(TestCase):
     intent = None
 

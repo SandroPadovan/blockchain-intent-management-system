@@ -1,5 +1,6 @@
 from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
+from django.test import override_settings
 
 from .models import Policy
 from intent_manager.models import Intent
@@ -12,6 +13,7 @@ from refiner.irtk.policy import Policy as irtkPolicy, CostProfile, Interval, Blo
 from refiner.irtk.intent import Blockchain
 
 
+@override_settings(USE_PLEBEUS=False)
 class PolicyManagerTests(APITestCase):
     client = APIClient
     url = '/api/policies/'
