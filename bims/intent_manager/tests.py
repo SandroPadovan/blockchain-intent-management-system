@@ -6,6 +6,7 @@ from user_manager.models import User
 from refiner.models import Currency
 from policy_manager.models import Policy
 import time
+import pickle
 
 
 @override_settings(USE_PLEBEUS=False)
@@ -74,11 +75,34 @@ class IntentManagerTests(APITestCase):
         """test PUT request to update an existing intent"""
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
 
-        # save an intent to the database
+        # save an intent and policy to the database
         existing_intent = Intent(username=User.objects.get(), intent_string='For client1 select the fastest '
-                                                                            'Blockchain until the daily costs reach '
-                                                                            'CHF 20')
+                                                                            'Blockchain until the daily costs reach 20')
         existing_intent.save()
+        usd = Currency(currency='USD', exchange_rate=1)
+        policy = Policy(
+            user='client1',
+            cost_profile='CostProfile.PERFORMANCE',
+            timeframe_start='Time.DEFAULT',
+            timeframe_end='Time.DEFAULT',
+            interval='Interval.DAILY',
+            threshold=20.0,
+            split_txs=False,
+            blockchain_pool=pickle.dumps([]),
+            blockchain_type='BlockchainType.INDIFFERENT',
+            min_tx_rate=4,
+            max_block_time=600,
+            min_data_size=20,
+            max_tx_cost=0.0,
+            min_popularity=0.0,
+            min_stability=0.0,
+            turing_complete=False,
+            encryption=False,
+            redundancy=False,
+            intent_id=existing_intent,
+            currency=usd,
+        )
+        policy.save()
 
         time.sleep(0.01)    # test was flaky: created_at and updated_at were sometimes equal
 
