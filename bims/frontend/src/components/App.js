@@ -23,7 +23,7 @@ import AlertTemplate from 'react-alert-template-basic';
 
 // Alert options
 const alertOptions = {
-    timeout: 5000,
+    timeout: 7000,
     position: 'top center',
 };
 
