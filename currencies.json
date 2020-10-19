@@ -1,0 +1,1 @@
+[{"model": "refiner.currency", "pk": "CHF", "fields": {"exchange_rate": 1.09}}, {"model": "refiner.currency", "pk": "EUR", "fields": {"exchange_rate": 1.17}}, {"model": "refiner.currency", "pk": "USD", "fields": {"exchange_rate": 1.0}}]
