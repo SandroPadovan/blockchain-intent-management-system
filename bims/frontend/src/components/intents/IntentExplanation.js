@@ -73,11 +73,11 @@ class IntentExplanation extends Component {
                         <li><mark>EUR</mark></li>
                     </ul>
                     If not specified, the default currency is USD.
-                    <p>At the end, a threshold is specified as a number. Notice that a dot at the end of the intent is
+                    <p>At the end, a threshold is specified as a number. Notice that a dot at the end of the Intent is
                         not valid.</p>
                 </div>
                 <h4 className="mt-4">Examples</h4>
-                <p>Here you find some examples for valid intents.</p>
+                <p>Here you find some examples for valid Intents.</p>
                 <p><mark>For client1 select the cheapest private blockchain as default</mark></p>
                 <p><mark>For client2, client3 and client4 in the day select the fastest cheap blockchain except EOS with
                     splitting until the daily costs reach CHF 50</mark></p>
