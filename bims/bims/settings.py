@@ -1,14 +1,8 @@
 import os
 
-# Custom Settings
+USE_PLEBEUS = False
 
-USE_PLEBEUS = True
-
-PLEBEUS_URL = 'http://130.60.156.183:3000'
-
-
-
-# Django generated settings
+PLEBEUS_URL = ''
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,7 +17,7 @@ SECRET_KEY = '%lwks4*so&uqafr86mipxx#qz*r9(fsai#+8zg5td=-b9)sftp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '130.60.156.183']
+ALLOWED_HOSTS = ['localhost']
 
 # Application definition
 
@@ -85,15 +79,13 @@ WSGI_APPLICATION = 'bims.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bims',
-        'USER': 'bims_admin',
+        'NAME': '',
+        'USER': '',
         'PASSWORD': '',
-        'HOST': 'localhost',
+        'HOST': '',
         'PORT': '',
     }
 }
-
-
 
 AUTH_USER_MODEL = 'user_manager.User'
 
