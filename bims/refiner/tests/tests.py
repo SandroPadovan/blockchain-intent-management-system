@@ -1,9 +1,9 @@
 from django.test import TestCase, override_settings
 import time
 
-from .refiner import refine_intent, save_policies, update_policies
+from refiner.refiner import refine_intent, save_policies, update_policies
 
-from .models import Currency
+from refiner.models import Currency
 from intent_manager.models import Intent
 from user_manager.models import User
 from policy_manager.models import Policy
