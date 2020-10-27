@@ -11,14 +11,21 @@ class Help extends Component {
                 <h4>What is the Blockchain Intent Management System?</h4>
                 <p>The Blockchain Intent Management System uses Intent-based Management for the process of Blockchain
                     Selection. It let's users create Intents, which are refined into one or multiple Policies. The
-                    system let's a user manage Intents, update, or delete them.</p>
+                    system let's a user create Intents, update, or delete them. Furthermore, it connects to a Policy-based
+                    Blockchain Selection Framework called PleBeuS.</p>
                 <h4>What is an Intent and Intent-based Management?</h4>
                 <p>An Intent can be defined as a high-level policy used to manage a system. It only contains abstract
-                    information, i.e. it defines "what" should be done, but not "how" to do it.</p>
+                    information, i.e. it defines "what" should be done, but not "how" to do it. In Intent-based
+                    Management, Intents are applied to simplify the use of a system and abstract technical information
+                    from the end user.</p>
                 <h4>What is a Policy?</h4>
                 <p>A Policy is the result of the Intent Refinement process. It contains much more low-level details than
                     the Intent and is designed to be applied in a system. The Policies corresponding to an Intent can be
                     seen on the Details page of an Intent.</p>
+                <h4>What is PleBeuS?</h4>
+                <p>PleBeuS is a Policy-based Blockchain Selection framework. The policies resulting from an Intent are
+                    sent to PleBeuS, where a Blockchain matching the criteria of the policy is selected for incoming
+                    transactions.</p>
                 <IntentExplanation/>
                 <h4>How do I edit / update an Intent?</h4>
                 <p>In the Intent Overview, select the Intent you want to edit by clicking on Details. Then, in the
@@ -28,7 +35,7 @@ class Help extends Component {
                 <h4>How do I delete an Intent?</h4>
                 <p>In the Intent Overview, select the Intent you want to edit by clicking on Details. Then, in the
                     Intent Details, there is a button which lets you delete the Intent. Note that all policies
-                    corresponding to an intent will be deleted. Deleting an Intent is irreversible.</p>
+                    corresponding to an Intent will be deleted. Deleting an Intent is irreversible.</p>
             </div>
         );
     }
