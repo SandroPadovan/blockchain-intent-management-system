@@ -179,6 +179,9 @@ can be specified.
 (venv) $ python bims/manage.py test bims.integration_tests
 ```
 
+Note that in order to run tests, the database user needs permission to create a test database
+in PostgreSQL.
+
 ## Troubleshooting
 
 #### ```OperationalError: could not connect to server: Connection refused```
