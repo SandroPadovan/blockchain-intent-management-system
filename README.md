@@ -176,6 +176,8 @@ can be specified.
 (venv) $ python bims/manage.py test intent_manager.tests
 (venv) $ python bims/manage.py test policy_manager.tests.tests
 (venv) $ python bims/manage.py test policy_manager.tests.plebeus_tests
+(venv) $ python bims/manage.py test refiner.tests.tests
+(venv) $ python bims/manage.py test refiner.tests.parser_tests
 (venv) $ python bims/manage.py test bims.integration_tests
 ```
 
