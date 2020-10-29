@@ -39,6 +39,7 @@ class PlebeusTests(TestCase):
         'policy': {'_id': '829919'}
     })
 
+    @override_settings(USE_PLEBEUS=True)
     @patch('policy_manager.plebeus.requests.get')
     @patch('policy_manager.plebeus.requests.post')
     def test_create_policy_with_existing_user(self, mock_post, mock_get):
@@ -67,6 +68,7 @@ class PlebeusTests(TestCase):
                                           '"bcDataSize": 20}',
                                           headers={'Content-Type': 'application/json'})
 
+    @override_settings(USE_PLEBEUS=True)
     @patch('policy_manager.plebeus.requests.get')
     @patch('policy_manager.plebeus.requests.post')
     def test_save_policy_with_new_user(self, mock_post, mock_get):
@@ -113,6 +115,7 @@ class PlebeusTests(TestCase):
                                   '"bcDataSize": 20}',
                                   headers={'Content-Type': 'application/json'})
 
+    @override_settings(USE_PLEBEUS=True)
     @patch('policy_manager.plebeus.requests.get')
     @patch('policy_manager.plebeus.requests.post')
     def test_update_existing_policy(self, mock_post, mock_get):
@@ -143,6 +146,7 @@ class PlebeusTests(TestCase):
                                           '"bcDataSize": 20}',
                                           headers={'Content-Type': 'application/json'})
 
+    @override_settings(USE_PLEBEUS=True)
     @patch('policy_manager.plebeus.requests.get')
     @patch('policy_manager.plebeus.requests.post')
     def test_save_policy_failed(self, mock_post, mock_get):
@@ -172,6 +176,7 @@ class PlebeusTests(TestCase):
 
         mock_delete.assert_not_called()
 
+    @override_settings(USE_PLEBEUS=True)
     @patch('policy_manager.plebeus.requests.delete')
     def test_delete_policy(self, mock_delete):
         pbs_id = '123456789'
