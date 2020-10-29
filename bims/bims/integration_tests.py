@@ -29,10 +29,19 @@ class IntegrationTests(APITestCase):
         token = registration_response.data.get('token')
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
+        # parse intent
+        parse_response = self.client.post('/api/parser', {'intent_string': 'For client1 select the'}, format='json')
+        self.assertEqual(parse_response.status_code, status.HTTP_200_OK, 'Incorrect status code of parse response')
+        self.assertEqual(parse_response.data.get('expected'), {'fastest', 'cheapest'},
+                         'Parser: incorrect expected words')
+
         # create two intents
         intent1 = 'For client1 select the fastest Blockchain as default'
         intent2 = 'For client2 select the cheapest Blockchain except EOS with redundancy and splitting until the ' \
                   'daily costs reach CHF 20'
+
+        parse_response2 = self.client.post('/api/parser', {'intent_string': intent1}, format='json')
+        self.assertEqual(parse_response2.status_code, status.HTTP_204_NO_CONTENT, 'Incorrect status of parse resp2')
 
         POST_intent1 = self.client.post('/api/intents/', {'intent_string': intent1}, format='json')
         self.assertEqual(POST_intent1.status_code, status.HTTP_201_CREATED,
@@ -64,28 +73,42 @@ class IntegrationTests(APITestCase):
         self.assertEqual(len(GET_policy2.data), 1, 'Incorrect number of policies returned for intent2')
         self.assertTrue('EOS' not in GET_policy2.data[0]['blockchain_pool'], 'EOS was in blockchain pool.')
 
-        # update intent
+        # update intent2
         new_intent2 = 'For client2 and client3 select the cheapest Blockchain except Bitcoin with redundancy and ' \
                       'splitting until the daily costs reach 21'
-        PUT_intent2 = self.client.put('/api/intents/' + str(intent_id2) + '/', {'intent_string': new_intent2}, format='json')
+        PUT_intent2 = self.client.put('/api/intents/' + str(intent_id2) + '/', {'intent_string': new_intent2},
+                                      format='json')
         self.assertEqual(PUT_intent2.status_code, status.HTTP_200_OK, 'Incorrect status of PUT intent')
         self.assertEqual(Intent.objects.get(id=intent_id2).intent_string, new_intent2)
 
         # get updated policies
         GET_updated_policy = self.client.get('/api/policies/?intent_id=' + str(intent_id2))
-        self.assertEqual(GET_updated_policy.status_code, status.HTTP_200_OK, 'Incorrect status of GET policies2 request')
+        self.assertEqual(GET_updated_policy.status_code, status.HTTP_200_OK,
+                         'Incorrect status of GET policies2 request')
         self.assertEqual(len(GET_updated_policy.data), 2, 'Incorrect number of policies returned for intent2')
         self.assertEqual(GET_updated_policy.data[0]['threshold'], 21, 'Incorrect threshold of updated policy')
         self.assertTrue(GET_updated_policy.data[0]['threshold'] == GET_updated_policy.data[1]['threshold'],
                         'Thresholds of policies are not equal')
         self.assertTrue(bool(GET_updated_policy.data[0]['created_at'] != GET_updated_policy.data[0]['updated_at'])
                         != bool(GET_updated_policy.data[1]['created_at'] != GET_updated_policy.data[1]['updated_at']))
-        self.assertTrue('BITCOIN' not in GET_updated_policy.data[0]['blockchain_pool'], 'BITCOIN was in blockchain pool.')
+        self.assertTrue('BITCOIN' not in GET_updated_policy.data[0]['blockchain_pool'],
+                        'BITCOIN was in blockchain pool.')
         self.assertTrue('EOS' in GET_updated_policy.data[0]['blockchain_pool'], 'EOS was not in blockchain pool.')
 
+        # delete intent2
         DEL_intent = self.client.delete('/api/intents/' + str(intent_id2) + '/')
         self.assertEqual(DEL_intent.status_code, status.HTTP_204_NO_CONTENT, 'Intent was not deleted.')
-        self.assertEqual(self.client.get('/api/intents/' + str(intent_id2) + '/').status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(self.client.get('/api/intents/' + str(intent_id2) + '/').status_code,
+                         status.HTTP_404_NOT_FOUND)
+
+        # try to change intent_1 to non-default
+        non_default_intent = 'For client1 select the fastest blockchain except bitcoin until the weekly costs reach 30'
+        PUT_intent1 = self.client.put('/api/intents/' + str(intent_id1) + '/',
+                                      {'intent_string': non_default_intent},
+                                      format='json')
+        self.assertEqual(PUT_intent1.status_code, status.HTTP_400_BAD_REQUEST,
+                         'default Intent was changed to non-default')
+        self.assertNotEqual(Intent.objects.get(id=intent_id1).intent_string, non_default_intent)
 
         # log out
         POST_logout = self.client.post('/api/auth/logout/', None, format='json')
