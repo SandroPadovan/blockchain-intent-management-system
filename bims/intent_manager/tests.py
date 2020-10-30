@@ -11,14 +11,12 @@ import pickle
 
 @override_settings(USE_PLEBEUS=False)
 class IntentManagerTests(APITestCase):
-
     client = APIClient
     url = '/api/intents/'
     token = None
     user_id = None
 
     def setUp(self) -> None:
-
         # obtain a valid token
         credentials = {'username': 'testUser0',
                        'password': 'password'}
@@ -64,12 +62,10 @@ class IntentManagerTests(APITestCase):
         data = {'intent_string': intent}
 
         response = self.client.post(self.url, data, format='json')
-        print(response.data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, 'Incorrect status code')
         self.assertEqual(Intent.objects.count(), 0, 'Intent was created, although not valid')
         self.assertTrue(len(response.data.get('expected')) != 0, 'Expected array is empty')
-
 
     def test_update_intent(self):
         """test PUT request to update an existing intent"""
@@ -104,7 +100,7 @@ class IntentManagerTests(APITestCase):
         )
         policy.save()
 
-        time.sleep(0.01)    # test was flaky: created_at and updated_at were sometimes equal
+        time.sleep(0.01)  # test was flaky: created_at and updated_at were sometimes equal
 
         # id of existing intent
         intent_id = Intent.objects.get().id
