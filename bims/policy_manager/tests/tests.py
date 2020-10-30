@@ -77,6 +77,23 @@ class PolicyManagerTests(APITestCase):
         self.assertEqual(sorted(response.data[0]['blockchain_pool']), ['ETHEREUM', 'STELLAR'],
                          'Incorrect blockchain pool')
 
+    def test_get_policy_from_different_user(self):
+
+        # save policy
+        self.save_policy()
+
+        # save new user
+        credentials = {'username': 'testUser1',
+                       'password': 'password2'}
+        user_response = self.client.post('/api/auth/register', credentials, format='json')
+        token = user_response.data.get('token')
+
+        # set token of request to new user's token
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        response = self.client.get(self.url + '?intent_id=' + str(self.intent_id))
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, 'Incorrect status code')
+
     def test_create_policy(self):
         # set up necessary models
         usd = Currency(currency='USD', exchange_rate=1)

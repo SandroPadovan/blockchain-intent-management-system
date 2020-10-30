@@ -43,6 +43,25 @@ class IntentManagerTests(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, 'Incorrect status code')
 
+    def test_get_intents_from_different_user(self):
+
+        # create intent
+        user = User.objects.get(id=self.user_id)
+        intent = Intent(username=user, intent_string='For client1 select EOS as default')
+        intent.save()
+
+        # create new user
+        credentials = {'username': 'testUser1',
+                       'password': 'password2'}
+        user_response = self.client.post('/api/auth/register', credentials, format='json')
+        token = user_response.data.get('token')
+
+        # set token of request to new user's token
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        response = self.client.get(self.url + str(intent.id) + '/')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, 'Incorrect status code')
+
     def test_post_intent(self):
         """test POST request of an intent"""
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
